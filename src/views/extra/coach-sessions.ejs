@@ -1,0 +1,159 @@
+<%- include('../partials/head') %>
+
+<div class="page-heading">
+  <div>
+    <h2>My Training Sessions</h2>
+    <p class="text-muted mb-0">
+      Create and update training schedules for your classes.
+    </p>
+  </div>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<div class="card p-4 mb-4">
+  <h4 class="mb-3">New Session</h4>
+
+  <form method="post" action="/coach/sessions">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">My Class</label>
+        <select class="form-select" name="class_id" required>
+          <% classes.forEach(c => { %>
+            <option value="<%= c.class_id %>">
+              <%= c.class_name %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Date</label>
+        <input
+          class="form-control"
+          type="date"
+          name="session_date"
+          required
+        >
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">Start</label>
+        <input
+          class="form-control"
+          type="time"
+          name="start_time"
+          required
+        >
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label">End</label>
+        <input
+          class="form-control"
+          type="time"
+          name="end_time"
+          required
+        >
+      </div>
+
+      <div class="col-md-8">
+        <label class="form-label">Location</label>
+        <input
+          class="form-control"
+          name="location"
+          placeholder="e.g. Field A"
+        >
+      </div>
+
+      <div class="col-md-4">
+        <button
+          type="submit"
+          class="btn btn-success w-100"
+          <%= classes.length === 0 ? 'disabled' : '' %>
+        >
+          <i class="bi bi-plus-circle"></i> Add Session
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<h4 class="mb-3">Assigned Sessions</h4>
+
+<% if (sessions.length === 0) { %>
+  <div class="card p-4 text-center text-muted">
+    No sessions assigned yet.
+  </div>
+<% } %>
+
+<% sessions.forEach(s => { %>
+  <div class="card p-4 mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0"><%= s.class_name %></h5>
+      <span class="badge bg-primary">Session #<%= s.session_id %></span>
+    </div>
+
+    <form method="post"
+          action="/coach/sessions/<%= s.session_id %>/update">
+
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label">Date</label>
+          <input
+            class="form-control"
+            type="date"
+            name="session_date"
+            value="<%= s.session_date %>"
+            required
+          >
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Start</label>
+          <input
+            class="form-control"
+            type="time"
+            name="start_time"
+            value="<%= s.start_time %>"
+            required
+          >
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">End</label>
+          <input
+            class="form-control"
+            type="time"
+            name="end_time"
+            value="<%= s.end_time %>"
+            required
+          >
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Location</label>
+          <input
+            class="form-control"
+            name="location"
+            value="<%= s.location || '' %>"
+          >
+        </div>
+
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-outline-primary w-100">
+            <i class="bi bi-save"></i> Update
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+<% }) %>
+
+<%- include('../partials/foot') %>

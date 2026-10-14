@@ -1,0 +1,1140 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>FAMS</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;600&display=swap">
+<style>
+/* Layout: navy sidebar + top bar with global search and user menu; content on a light grey ground. Palette from the supplied mockup: navy #0B3D91, blue #1E88E5, green #42A05C, grey #F4F6F8, ink #212529. Poppins throughout. */
+:root{
+  --font:'Poppins','Noto Sans Thai',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --bg:#F4F6F8; --surface:#ffffff; --surface-2:#f6f8fb; --ink:#212529; --muted:#667085; --line:#e3e8ef;
+  --side:#0B3D91; --side-ink:#dbe6fb; --side-hover:#164aa6; --side-active:#1E88E5; --side-dim:#9db7ea;
+  --primary:#1976d2; --on-primary:#ffffff; --blue:#1E88E5; --blue-soft:#e3f0fd;
+  --green:#42A05C; --green-ink:#2b7d44; --green-btn:#2f8a4b; --on-green:#ffffff; --green-soft:#e1f2e6;
+  --late:#a85f00; --late-bg:#fdecc8; --bad:#c62828; --bad-bg:#fbe0dd; --amber:#f2a516; --red:#e0453a;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 4px 14px rgba(16,24,40,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d1623; --surface:#152033; --surface-2:#1a273b; --ink:#e7edf5; --muted:#98a6b8; --line:#26364f;
+  --side:#091d45; --side-ink:#d3e0f7; --side-hover:#12306a; --side-active:#1E88E5; --side-dim:#7f98c6;
+  --primary:#4aa3f0; --on-primary:#07203d; --blue:#4aa3f0; --blue-soft:#16314f;
+  --green:#4cb86a; --green-ink:#6fd68e; --green-btn:#5ccb7d; --on-green:#062a14; --green-soft:#183a26;
+  --late:#f0b64d; --late-bg:#3a2f14; --bad:#ff8a80; --bad-bg:#3e1f1c; --amber:#f2b84b; --red:#ef6f63;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1623; --surface:#152033; --surface-2:#1a273b; --ink:#e7edf5; --muted:#98a6b8; --line:#26364f;
+  --side:#091d45; --side-ink:#d3e0f7; --side-hover:#12306a; --side-active:#1E88E5; --side-dim:#7f98c6;
+  --primary:#4aa3f0; --on-primary:#07203d; --blue:#4aa3f0; --blue-soft:#16314f;
+  --green:#4cb86a; --green-ink:#6fd68e; --green-btn:#5ccb7d; --on-green:#062a14; --green-soft:#183a26;
+  --late:#f0b64d; --late-bg:#3a2f14; --bad:#ff8a80; --bad-bg:#3e1f1c; --amber:#f2b84b; --red:#ef6f63;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3); color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{margin:0;font-weight:600;text-wrap:balance}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---------- login ---------- */
+.login{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);min-height:100vh}
+.hero{background:linear-gradient(135deg,#0B3D91 0%,#0b5a9b 58%,#2f8a4b 130%);color:#fff;padding:48px clamp(20px,5vw,64px);display:flex;flex-direction:column;justify-content:center;gap:18px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -80px -120px auto;width:420px;height:420px;border-radius:50%;border:2px solid rgba(255,255,255,.16);box-shadow:0 0 0 60px rgba(255,255,255,.04)}
+.hero .logo{width:88px;height:88px}
+.hero h1{font-size:clamp(40px,6vw,60px);line-height:1;font-weight:700;letter-spacing:.02em}
+.hero p{margin:0;font-size:18px;max-width:22ch;line-height:1.35;opacity:.92}
+.hero .tag{margin-top:18px;font-weight:600;font-size:16px;line-height:1.5;opacity:.95}
+.lform{display:flex;align-items:center;justify-content:center;padding:32px clamp(16px,4vw,48px);background:var(--bg)}
+.lcard{width:min(400px,100%);display:grid;gap:14px}
+.lcard h2{font-size:26px}
+.lcard .sub{margin:-8px 0 4px;color:var(--muted)}
+.lrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.demo{margin-top:6px;padding-top:14px;border-top:1px solid var(--line);display:grid;gap:8px}
+.demo small{color:var(--muted)}
+.demo div{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ---------- shell ---------- */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);color:var(--side-ink);position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 12px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px;color:#fff}
+.brand svg{width:32px;height:32px;flex:none}
+.brand b{font-size:22px;font-weight:700;letter-spacing:.05em}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav button{display:flex;align-items:center;gap:12px;background:none;border:0;border-radius:8px;padding:10px 12px;color:var(--side-ink);cursor:pointer;text-align:left;font-weight:500}
+.nav button:hover{background:var(--side-hover)}
+.nav button[aria-current="page"]{background:var(--side-active);color:#fff}
+.side .note{margin-top:auto;font-size:12px;line-height:1.5;color:var(--side-dim);padding:10px 8px 0;border-top:1px solid var(--side-hover)}
+.content{min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px clamp(16px,3vw,32px);background:var(--surface);border-bottom:1px solid var(--line)}
+.search{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:0 12px;flex:0 1 360px;min-width:0;color:var(--muted)}
+.search input{border:0;background:none;padding:8px 0;width:100%;min-width:0;outline:none;color:var(--ink)}
+.user{position:relative}
+.ubtn{display:flex;align-items:center;gap:10px;background:none;border:0;cursor:pointer;padding:4px 6px;border-radius:10px;text-align:left}
+.ubtn:hover{background:var(--surface-2)}
+.av{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:600;font-size:13px;flex:none}
+.av.lg{width:64px;height:64px;font-size:22px}
+.av.green{background:var(--green)}
+.un{display:flex;flex-direction:column;line-height:1.2}
+.un b{font-size:13px;font-weight:600}.un small{color:var(--muted);font-size:12px}
+.menu{position:absolute;right:0;top:calc(100% + 6px);min-width:180px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:6px;z-index:20}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-radius:7px;padding:8px 10px;cursor:pointer;text-align:left}
+.menu button:hover{background:var(--surface-2)}
+.main{padding:24px clamp(16px,3vw,32px) 56px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px 16px;flex-wrap:wrap;margin-bottom:20px}
+.top h1{font-size:clamp(22px,3.2vw,28px);line-height:1.2}
+.top p{margin:2px 0 0;color:var(--muted)}
+.today{color:var(--muted);font-size:13px;padding-top:6px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ---------- controls ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--primary);color:var(--on-primary);border:1px solid var(--primary);border-radius:8px;padding:8px 16px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.08)}
+.btn.green{background:var(--green-btn);border-color:var(--green-btn);color:var(--on-green)}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface-2);filter:none}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.sm{padding:4px 12px;font-size:13px;border-radius:7px}
+.btn.block{width:100%;padding:10px 16px}
+.link{background:none;border:0;padding:2px 4px;color:var(--primary);font-weight:600;cursor:pointer}
+.link:hover{text-decoration:underline}
+.ib{display:inline-grid;place-items:center;width:32px;height:32px;background:none;border:0;border-radius:8px;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.ib:hover{background:var(--surface-2);color:var(--ink)}
+.ib.view{color:var(--blue)}.ib.edit{color:var(--green-ink)}.ib.del{color:var(--red)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.toolbar input,.toolbar select,.f input,.f select,.f textarea,.remark,.stsel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
+.toolbar input{flex:1 1 240px;max-width:380px}
+.toolbar label{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
+
+/* ---------- panels & tables ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0;box-shadow:var(--shadow)}
+.panel>h2,.panelhead h2{font-size:16px;margin-bottom:10px}
+.panelhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.panelhead h2{margin:0}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.grid3{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.stack16{display:grid;gap:16px;margin-bottom:16px}
+.empty{color:var(--muted);padding:12px 2px;margin:0}
+.tablewrap{overflow-x:auto}
+.panel .tablewrap{margin:0 -4px}
+.tw{border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th{font-weight:600;font-size:12px;color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface-2)}
+th:first-child{border-top-left-radius:10px}th:last-child{border-top-right-radius:10px}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.rowact{white-space:nowrap;text-align:right}
+.mut{color:var(--muted)}
+.chip{display:inline-block;font-size:12px;border-radius:6px;padding:1px 9px;background:var(--blue-soft);color:var(--primary);font-weight:600}
+.pill{display:inline-block;font-size:12px;font-weight:600;border-radius:999px;padding:2px 12px}
+.pill.present,.pill.active,.pill.good{background:var(--green-soft);color:var(--green-ink)}
+.pill.late,.pill.pending{background:var(--late-bg);color:var(--late)}
+.pill.absent,.pill.inactive{background:var(--bad-bg);color:var(--bad)}
+.pill.info{background:var(--blue-soft);color:var(--primary)}
+
+/* ---------- tiles & charts ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:16px}
+.tile{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);min-width:0}
+.ti{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;flex:none}
+.ti .ic{width:24px;height:24px}
+.ti.blue{background:var(--blue-soft);color:var(--primary)}
+.ti.green{background:var(--green-soft);color:var(--green-ink)}
+.ti.amber{background:var(--late-bg);color:var(--late)}
+.ti.red{background:var(--bad-bg);color:var(--bad)}
+.tile b{display:block;font-size:26px;line-height:1.1;font-weight:700;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tile span.l{color:var(--muted);font-size:13px}
+.donut{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donut svg{width:150px;height:150px;flex:none}
+.dn{fill:none;stroke-width:14}
+.dn.t{stroke:var(--surface-2)}.dn.p{stroke:var(--green)}.dn.l{stroke:var(--amber)}.dn.a{stroke:var(--red)}
+.dtxt{font-size:22px;font-weight:700;fill:var(--ink)}
+.legend{display:grid;gap:6px;font-size:13px}
+.legend div{display:flex;align-items:center;gap:8px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend b{margin-left:auto;padding-left:14px;font-variant-numeric:tabular-nums}
+.i-p{background:var(--green)}.i-l{background:var(--amber)}.i-a{background:var(--red)}
+.bars{display:flex;align-items:flex-end;gap:clamp(8px,3vw,28px);height:190px;padding-top:8px}
+.bars .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;gap:4px}
+.bars .col b{font-size:13px;font-variant-numeric:tabular-nums}
+.bars .col i{display:block;width:min(46px,70%);background:var(--blue);border-radius:6px 6px 0 0;min-height:3px}
+.bars .col span{font-size:12px;color:var(--muted);text-align:center}
+.line{width:100%;height:auto;display:block}
+.line .gl{stroke:var(--line);stroke-width:1}
+.line .ax{fill:var(--muted);font-size:10px}
+.line .ln{fill:none;stroke:var(--blue);stroke-width:2.5;stroke-linejoin:round}
+.line .pt{fill:var(--surface);stroke:var(--blue);stroke-width:2}
+.hbar{display:grid;grid-template-columns:130px minmax(0,1fr) 36px;gap:10px;align-items:center;margin:10px 0;font-size:13px}
+.hbar .t{height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.hbar .t i{display:block;height:100%;background:var(--blue);border-radius:4px}
+.hbar b{text-align:right;font-variant-numeric:tabular-nums}
+.rbar{display:inline-block;vertical-align:middle;width:84px;height:8px;border-radius:4px;background:var(--surface-2);margin-right:8px;overflow:hidden}
+.rbar i{display:block;height:100%;background:var(--green)}
+.rbar.mid i{background:var(--amber)}.rbar.low i{background:var(--red)}
+
+/* ---------- cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;box-shadow:var(--shadow)}
+.card h3{font-size:17px;line-height:1.25}
+.card .who{display:flex;align-items:center;gap:12px;min-width:0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0;font-size:13.5px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.card .foot{margin-top:auto;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.ul{margin:4px 0 0;padding-left:18px}
+.mini{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;width:100%}
+.mini:hover{border-color:var(--blue)}
+.mini b{display:block}.mini small{color:var(--muted)}
+.minis{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+
+/* ---------- training calendar ---------- */
+.trg{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:16px;align-items:start}
+.calh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.calg em{font-style:normal;font-size:11px;color:var(--muted);padding:4px 0}
+.day{position:relative;aspect-ratio:1;border:0;border-radius:8px;background:none;cursor:pointer;font-weight:500;display:grid;place-items:center}
+.day:hover{background:var(--surface-2)}
+.day.today{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.day.sel{background:var(--primary);color:var(--on-primary)}
+.day i{position:absolute;bottom:4px;width:5px;height:5px;border-radius:50%;background:var(--green)}
+.day.sel i{background:var(--on-primary)}
+.sitem{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.sitem:last-child{border-bottom:0}
+.sitem h3{font-size:15px}
+.sitem .meta{color:var(--muted);font-size:13px}
+
+/* ---------- attendance ---------- */
+.stsel{font-weight:600;min-width:112px}
+.stsel.present{color:var(--green-ink);background:var(--green-soft)}
+.stsel.late{color:var(--late);background:var(--late-bg)}
+.stsel.absent{color:var(--bad);background:var(--bad-bg)}
+.remark{width:100%}
+.sum{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13px}
+.sum span b{font-variant-numeric:tabular-nums}
+.saved{border:1px solid var(--green);background:var(--green-soft);border-radius:12px;padding:12px 16px;margin-top:14px;color:var(--green-ink)}
+.saved h3{font-size:15px;margin-bottom:4px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px;border-bottom:1px solid var(--line)}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:8px 14px;font-weight:600;cursor:pointer;color:var(--muted);margin-bottom:-1px}
+.tabs button[aria-pressed="true"]{color:var(--primary);border-color:var(--primary)}
+.switch{position:relative;display:inline-block;width:40px;height:22px}
+.switch input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.switch span{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .15s}
+.switch span::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+.switch input:checked+span{background:var(--green)}
+.switch input:checked+span::after{transform:translateX(18px)}
+.switch input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+.switch input:disabled{cursor:not-allowed}.switch input:disabled+span{opacity:.5}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(8,20,40,.55);display:flex;align-items:flex-start;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) 16px 16px;overflow-y:auto;z-index:50}
+.dlg{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:min(520px,100%);margin-top:6vh;box-shadow:var(--shadow)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.dh h3{font-size:18px}
+.x{background:none;border:0;font-size:26px;line-height:1;cursor:pointer;color:var(--muted)}
+#mbody{padding:16px 18px;display:grid;gap:12px}
+.f{display:grid;gap:4px;font-size:13.5px;min-width:0}
+.f>span{color:var(--muted);font-weight:500;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.f input,.f select,.f textarea{width:100%}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{display:flex;align-items:center;gap:8px}
+.err{color:var(--bad);margin:0 18px 10px;font-weight:500}
+.df{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px 16px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:10px;font-weight:600;z-index:60;box-shadow:var(--shadow)}
+
+@media (max-width:900px){
+  .login{grid-template-columns:minmax(0,1fr)}
+  .hero{padding:28px 20px}.hero .logo{width:56px;height:56px}.hero .tag{margin-top:4px}
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;padding:10px 12px 6px;gap:6px}
+  .nav{flex-direction:row;overflow-x:auto;padding-bottom:6px}
+  .nav button{white-space:nowrap;padding:8px 12px}
+  .side .note{display:none}
+  .grid2,.grid3,.trg{grid-template-columns:minmax(0,1fr)}
+  .un{display:none}
+  .hbar{grid-template-columns:96px minmax(0,1fr) 30px}
+  .row2{grid-template-columns:1fr}
+}
+</style>
+
+<div id="root"></div>
+
+<div class="overlay" id="ov" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dt">
+    <div class="dh"><h3 id="dt"></h3><button class="x" type="button" data-a="close" aria-label="Close">&times;</button></div>
+    <form id="mform" novalidate>
+      <div id="mbody"></div>
+      <p class="err" id="merr" hidden></p>
+      <div class="df"><button type="button" class="btn ghost" data-a="close">Cancel</button><button class="btn" id="msubmit">Save</button></div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+const TODAY='2026-10-04';
+const AGES=['U10','U12','U15','U18'];
+const POS=['Goalkeeper','Defender','Midfielder','Forward'];
+const REL=['Father','Mother','Guardian','Other'];
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const ROLES={admin:'Admin',coach:'Coach',parent:'Parent',management:'Management'};
+const DEMO_PW='fams1234';
+
+/* ---------- sample data (mirrors the ERD, plus USER_ACCOUNT) ---------- */
+const S={
+  accounts:[
+    {id:1,email:'admin@fams.com',password:DEMO_PW,role:'admin',name:'Noppajit',coachId:null,parentId:null,active:true},
+    {id:2,email:'coach@fams.com',password:DEMO_PW,role:'coach',name:'',coachId:1,parentId:null,active:true},
+    {id:3,email:'parent@fams.com',password:DEMO_PW,role:'parent',name:'',coachId:null,parentId:1,active:true},
+    {id:4,email:'manager@fams.com',password:DEMO_PW,role:'management',name:'Director',coachId:null,parentId:null,active:true},
+    {id:5,email:'narin@fams.com',password:DEMO_PW,role:'coach',name:'',coachId:2,parentId:null,active:true}
+  ],
+  parents:[
+    {id:1,name:'Somchai Srisuk',phone:'081-234-5678',email:'parent@fams.com'},
+    {id:2,name:'Suda Thongdee',phone:'089-456-1122',email:'suda.t@mail.com'},
+    {id:3,name:'Prasert Pattana',phone:'086-778-3041',email:'prasert.p@mail.com'},
+    {id:4,name:'Wanida Wongsa',phone:'082-310-9987',email:'wanida.w@mail.com'},
+    {id:5,name:'Anan Boonmee',phone:'085-640-2215',email:'anan.b@mail.com'},
+    {id:6,name:'Malee Chai',phone:'087-902-6634',email:'malee.c@mail.com'},
+    {id:7,name:'John Morgan',phone:'080-115-7420',email:'john.morgan@mail.com'},
+    {id:8,name:'Siriporn Kaewmanee',phone:'084-377-0518',email:'siriporn.k@mail.com'}
+  ],
+  players:[
+    {id:1,name:'Thanawat Srisuk',dob:'2014-05-12',phone:'081-234-5678',age:'U12',pos:'Forward'},
+    {id:2,name:'Krit Thongdee',dob:'2014-08-03',phone:'089-456-1122',age:'U12',pos:'Defender'},
+    {id:3,name:'Narin Pattana',dob:'2011-02-19',phone:'086-778-3041',age:'U15',pos:'Goalkeeper'},
+    {id:4,name:'Kavin Rattanakul',dob:'2014-11-27',phone:'089-456-1122',age:'U12',pos:'Midfielder'},
+    {id:5,name:'Pichai Wongsa',dob:'2011-06-30',phone:'082-310-9987',age:'U15',pos:'Forward'},
+    {id:6,name:'Arthit Boonmee',dob:'2011-09-14',phone:'085-640-2215',age:'U15',pos:'Defender'},
+    {id:7,name:'Nattapong Chai',dob:'2013-01-22',phone:'087-902-6634',age:'U12',pos:'Midfielder'},
+    {id:8,name:'Somsak Kaewmanee',dob:'2016-03-08',phone:'084-377-0518',age:'U10',pos:'Forward'},
+    {id:9,name:'Tanawin Lertsiri',dob:'2016-07-15',phone:'084-377-0518',age:'U10',pos:'Midfielder'},
+    {id:10,name:'Alex Morgan',dob:'2014-04-09',phone:'080-115-7420',age:'U12',pos:'Defender'},
+    {id:11,name:'Phuwadol Sai',dob:'2011-12-01',phone:'082-310-9987',age:'U15',pos:'Midfielder'},
+    {id:12,name:'Chayut Promma',dob:'2013-10-05',phone:'087-902-6634',age:'U12',pos:'Goalkeeper'}
+  ],
+  links:[
+    {playerId:1,parentId:1,rel:'Father',primary:true},
+    {playerId:2,parentId:2,rel:'Mother',primary:true},
+    {playerId:2,parentId:1,rel:'Guardian',primary:false},
+    {playerId:4,parentId:2,rel:'Guardian',primary:true},
+    {playerId:3,parentId:3,rel:'Father',primary:true},
+    {playerId:5,parentId:4,rel:'Mother',primary:true},
+    {playerId:11,parentId:4,rel:'Mother',primary:true},
+    {playerId:6,parentId:5,rel:'Father',primary:true},
+    {playerId:7,parentId:6,rel:'Mother',primary:true},
+    {playerId:12,parentId:6,rel:'Mother',primary:true},
+    {playerId:10,parentId:7,rel:'Father',primary:true},
+    {playerId:8,parentId:8,rel:'Mother',primary:true},
+    {playerId:9,parentId:8,rel:'Mother',primary:true}
+  ],
+  coaches:[
+    {id:1,code:'C001',name:'Somchai Wong',phone:'081-555-0101',email:'coach@fams.com'},
+    {id:2,code:'C002',name:'Narin Kittisak',phone:'089-555-0102',email:'narin@fams.com'},
+    {id:3,code:'C003',name:'Pranee Charoen',phone:'086-555-0103',email:'pranee@academy.com'}
+  ],
+  classes:[
+    {id:1,name:'U12 Beginner',age:'U12',coachId:1,program:'Basic Football Development'},
+    {id:2,name:'U12 Advanced',age:'U12',coachId:1,program:'Tactical Skills'},
+    {id:3,name:'U15 Beginner',age:'U15',coachId:2,program:'Ball Mastery'},
+    {id:4,name:'U15 Advanced',age:'U15',coachId:2,program:'Match Preparation'},
+    {id:5,name:'U10 Foundation',age:'U10',coachId:3,program:'Fun and Fundamentals'}
+  ],
+  regs:[
+    {id:1,playerId:1,classId:1,date:'2026-09-01',status:'Active'},
+    {id:2,playerId:2,classId:1,date:'2026-09-02',status:'Active'},
+    {id:3,playerId:4,classId:1,date:'2026-09-02',status:'Active'},
+    {id:4,playerId:10,classId:1,date:'2026-10-03',status:'Active'},
+    {id:5,playerId:7,classId:2,date:'2026-09-05',status:'Active'},
+    {id:6,playerId:12,classId:2,date:'2026-09-05',status:'Active'},
+    {id:7,playerId:6,classId:3,date:'2026-09-08',status:'Active'},
+    {id:8,playerId:11,classId:3,date:'2026-09-10',status:'Active'},
+    {id:9,playerId:3,classId:4,date:'2026-09-05',status:'Active'},
+    {id:10,playerId:5,classId:4,date:'2026-09-06',status:'Active'},
+    {id:11,playerId:8,classId:5,date:'2026-09-12',status:'Active'},
+    {id:12,playerId:9,classId:5,date:'2026-09-12',status:'Active'},
+    {id:13,playerId:5,classId:2,date:'2026-09-20',status:'Inactive'},
+    {id:14,playerId:4,classId:2,date:'2026-10-03',status:'Pending'}
+  ],
+  sessions:[
+    {id:1,classId:1,date:'2026-09-23',start:'16:00',end:'17:30',field:'Field A'},
+    {id:2,classId:4,date:'2026-09-25',start:'18:00',end:'19:30',field:'Field B'},
+    {id:3,classId:3,date:'2026-09-26',start:'17:00',end:'18:30',field:'Field B'},
+    {id:4,classId:5,date:'2026-09-27',start:'09:00',end:'10:30',field:'Field C'},
+    {id:5,classId:1,date:'2026-09-30',start:'16:00',end:'17:30',field:'Field A'},
+    {id:6,classId:2,date:'2026-10-01',start:'16:00',end:'17:30',field:'Field C'},
+    {id:7,classId:1,date:'2026-10-02',start:'16:00',end:'17:30',field:'Field A'},
+    {id:8,classId:4,date:'2026-10-02',start:'18:00',end:'19:30',field:'Field B'},
+    {id:9,classId:1,date:'2026-10-04',start:'16:00',end:'17:30',field:'Field A'},
+    {id:10,classId:4,date:'2026-10-04',start:'18:00',end:'19:30',field:'Field B'},
+    {id:11,classId:1,date:'2026-10-07',start:'16:00',end:'17:30',field:'Field A'},
+    {id:12,classId:2,date:'2026-10-08',start:'16:00',end:'17:30',field:'Field C'},
+    {id:13,classId:4,date:'2026-10-09',start:'18:00',end:'19:30',field:'Field B'}
+  ],
+  att:[]
+};
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId=(arr,id)=>arr.find(x=>x.id===id)||null;
+const nextId=arr=>arr.reduce((m,x)=>Math.max(m,x.id),0)+1;
+const pad=n=>String(n).padStart(2,'0');
+const dt=d=>new Date(d+'T00:00:00');
+const longDate=d=>{const x=dt(d);return DAYS[x.getDay()]+', '+x.getDate()+' '+MONTHS[x.getMonth()]+' '+x.getFullYear()};
+const medDate=d=>{const x=dt(d);return x.getDate()+' '+MONTHS[x.getMonth()]+' '+x.getFullYear()};
+const shortDate=d=>{const x=dt(d);return x.getDate()+' '+MONTHS[x.getMonth()].slice(0,3)};
+const fmtDate=d=>{const p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0]};
+const monthLabel=m=>{const p=m.split('-');return MONTHS[+p[1]-1]+' '+p[0]};
+const pct=(r,dec)=>r==null?'–':r.toFixed(dec==null?1:dec)+'%';
+const sortSess=(a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start);
+const pname=id=>{const p=byId(S.players,id);return p?p.name:'?'};
+const cls=id=>byId(S.classes,id);
+const coachOf=c=>{const k=byId(S.coaches,c.coachId);return k?k.name:'Unassigned'};
+const first=n=>String(n||'').split(' ')[0];
+const initials=n=>String(n||'?').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+const classPlayers=(cid,onDate)=>S.regs.filter(r=>r.classId===cid&&r.status==='Active'&&(!onDate||r.date<=onDate)).map(r=>byId(S.players,r.playerId)).filter(Boolean);
+const getAtt=(sid,pid)=>S.att.find(a=>a.sid===sid&&a.pid===pid)||null;
+function setAtt(sid,pid,status,remark){const a=getAtt(sid,pid);if(a){a.status=status;a.remark=remark}else S.att.push({sid,pid,status,remark})}
+function attStats(filter){
+  const o={present:0,late:0,absent:0,total:0,rate:null};
+  S.att.forEach(a=>{
+    const s=byId(S.sessions,a.sid),p=byId(S.players,a.pid);
+    if(!s||!p)return;
+    if(filter&&!filter(a,s,p))return;
+    o[a.status]++;o.total++;
+  });
+  if(o.total)o.rate=o.present/o.total*100;
+  return o;
+}
+const rateClass=r=>r==null?'':(r<80?'low':(r<90?'mid':''));
+const emailOk=e=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e);
+
+(function seed(){
+  const pattern=['present','present','present','late','present','present','absent','present','present','present'];
+  S.sessions.forEach(s=>{
+    if(s.date>=TODAY)return;
+    classPlayers(s.classId,s.date).forEach(p=>{
+      const st=pattern[(p.id*3+s.id)%pattern.length];
+      S.att.push({sid:s.id,pid:p.id,status:st,remark:st==='absent'?'Sick':(st==='late'?'Traffic':'')});
+    });
+  });
+})();
+
+/* ---------- state ---------- */
+const UI={user:null,page:'dashboard',f:{q:'',age:'All',pq:'',rage:'All',rmon:'all'},draft:{rage:'All',rmon:'all'},classId:null,sid:null,saved:null,report:'attendance',calMonth:TODAY.slice(0,7),calDate:TODAY,child:null,navId:'dashboard'};
+let modalCb=null;
+
+/* ---------- icons ---------- */
+const IC={
+  dashboard:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  players:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  parents:'<circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5M16 14.5c3 0 6 1.5 6 5"/>',
+  coaches:'<path d="M8 4h8v3H8z"/><rect x="5" y="6" width="14" height="15" rx="2"/><path d="M9 12h6M9 16h4"/>',
+  classes:'<path d="M3 20V9l9-5 9 5v11"/><path d="M9 20v-6h6v6"/>',
+  registration:'<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/>',
+  training:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  attendance:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+  reports:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  accounts:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+  link:'<path d="M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
+  logout:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>'
+};
+const svg=(k,c)=>'<svg viewBox="0 0 24 24" class="'+(c||'ic')+'" aria-hidden="true">'+IC[k]+'</svg>';
+const BALL='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#fff"/><polygon points="24,15 32,21 29,31 19,31 16,21" fill="#212529"/><path d="M24 15V5M32 21l10-3M29 31l6 9M19 31l-6 9M16 21L6 18" stroke="#212529" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+const ib=(a,id,icon,label,c)=>'<button type="button" class="ib '+(c||'')+'" data-a="'+a+'" data-id="'+id+'" title="'+label+'" aria-label="'+label+'">'+svg(icon)+'</button>';
+
+/* ---------- roles & scope ---------- */
+const NAVS={
+  admin:[['dashboard','Dashboard','dashboard'],['players','Players','players'],['parents','Parents','parents'],['coaches','Coaches','coaches'],['classes','Classes','classes'],['registration','Registrations','registration'],['training','Training Sessions','training'],['attendance','Attendance','attendance'],['reports','Reports','reports'],['accounts','User Accounts','accounts']],
+  coach:[['dashboard','Dashboard','dashboard'],['classes','My Classes','classes'],['players','My Players','players'],['training','Training Sessions','training'],['attendance','Attendance','attendance']],
+  parent:[['dashboard','Dashboard','dashboard'],['children','My Children','players'],['attendance','Attendance','attendance'],['training','Training Schedule','training'],['profile','My Profile','accounts']],
+  management:[['dashboard','Dashboard','dashboard'],['reports:overview','Reports','reports'],['players','Players Overview','players'],['reports:registration','Class Statistics','classes'],['reports:attendance','Attendance Report','attendance']]
+};
+const role=()=>UI.user.role;
+const isAdmin=()=>role()==='admin';
+const allowed=p=>p==='profile'||NAVS[role()].some(n=>n[0].split(':')[0]===p);
+function displayName(a){
+  if(a.role==='coach'){const k=byId(S.coaches,a.coachId);if(k)return k.name}
+  if(a.role==='parent'){const p=byId(S.parents,a.parentId);if(p)return p.name}
+  return a.name||a.email;
+}
+const myChildren=()=>S.links.filter(l=>l.parentId===UI.user.parentId).map(l=>byId(S.players,l.playerId)).filter(Boolean);
+function scopeClasses(){
+  const r=role();
+  if(r==='coach')return S.classes.filter(c=>c.coachId===UI.user.coachId);
+  if(r==='parent'){
+    const ids=[];
+    myChildren().forEach(p=>S.regs.forEach(g=>{if(g.playerId===p.id&&g.status==='Active'&&ids.indexOf(g.classId)<0)ids.push(g.classId)}));
+    return S.classes.filter(c=>ids.indexOf(c.id)>-1);
+  }
+  return S.classes;
+}
+function scopePlayers(){
+  const r=role();
+  if(r==='coach'){const out=[];scopeClasses().forEach(c=>classPlayers(c.id).forEach(p=>{if(out.indexOf(p)<0)out.push(p)}));return out}
+  if(r==='parent')return myChildren();
+  return S.players;
+}
+function scopeSessions(){const ids=scopeClasses().map(c=>c.id);return S.sessions.filter(s=>ids.indexOf(s.classId)>-1)}
+function childSessions(p){
+  const ids=S.regs.filter(r=>r.playerId===p.id&&r.status==='Active').map(r=>r.classId);
+  return S.sessions.filter(s=>ids.indexOf(s.classId)>-1);
+}
+
+/* ---------- view pieces ---------- */
+const head=(title,sub,actions)=>'<header class="top"><div><h1>'+esc(title)+'</h1>'+(sub?'<p>'+esc(sub)+'</p>':'')+'</div><div class="actions">'+(actions||'')+'</div></header>';
+const todayChip=()=>'<span class="today">Today, '+medDate(TODAY)+'</span>';
+const tile=(label,val,icon,color)=>'<div class="tile"><span class="ti '+color+'">'+svg(icon)+'</span><div><b>'+esc(val)+'</b><span class="l">'+esc(label)+'</span></div></div>';
+const pill=(s,label)=>'<span class="pill '+String(s).toLowerCase()+'">'+esc(label||(s.charAt(0).toUpperCase()+s.slice(1)))+'</span>';
+function table(cols,rows,num){
+  return '<div class="tablewrap"><table><thead><tr>'+cols.map((c,i)=>'<th'+(num&&num.indexOf(i)>-1?' class="num"':'')+'>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+const emptyRow=(n,msg)=>'<tr><td colspan="'+n+'" class="empty">'+esc(msg)+'</td></tr>';
+const fld=(label,name,val,type,attrs)=>'<label class="f"><span>'+label+'</span><input id="f_'+name+'" name="'+name+'" type="'+(type||'text')+'" value="'+esc(val||'')+'" '+(attrs||'')+'></label>';
+function sel(label,name,opts,val,extra){
+  return '<label class="f"><span>'+label+(extra||'')+'</span><select id="f_'+name+'" name="'+name+'">'+opts.map(o=>{
+    const v=Array.isArray(o)?o[0]:o,t=Array.isArray(o)?o[1]:o;
+    return '<option value="'+esc(v)+'"'+(String(v)===String(val)?' selected':'')+'>'+esc(t)+'</option>';
+  }).join('')+'</select></label>';
+}
+const row2=(a,b)=>'<div class="row2">'+a+b+'</div>';
+const playerOpts=()=>S.players.map(p=>[p.id,p.name]);
+const classOpts=list=>(list||S.classes).map(c=>[c.id,c.name]);
+
+function donut(p,l,a){
+  const R=42,C=2*Math.PI*R,tot=p+l+a;
+  let off=0,arcs='';
+  [[p,'p'],[l,'l'],[a,'a']].forEach(x=>{
+    if(!x[0])return;
+    const len=x[0]/tot*C;
+    arcs+='<circle class="dn '+x[1]+'" cx="60" cy="60" r="'+R+'" stroke-dasharray="'+len.toFixed(2)+' '+(C-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" transform="rotate(-90 60 60)"/>';
+    off+=len;
+  });
+  const label=tot?Math.round(p/tot*100)+'%':'–';
+  return '<svg viewBox="0 0 120 120" role="img" aria-label="Attendance '+label+'"><circle class="dn t" cx="60" cy="60" r="'+R+'"/>'+arcs+'<text class="dtxt" x="60" y="66" text-anchor="middle">'+label+'</text></svg>';
+}
+function attDonutBlock(st){
+  return '<div class="donut">'+donut(st.present,st.late,st.absent)+'<div class="legend"><div><i class="i-p"></i>Present<b>'+st.present+'</b></div><div><i class="i-l"></i>Late<b>'+st.late+'</b></div><div><i class="i-a"></i>Absent<b>'+st.absent+'</b></div></div></div>';
+}
+function barChart(items){
+  const max=Math.max(1,...items.map(i=>i.value));
+  return '<div class="bars">'+items.map(i=>'<div class="col"><b>'+i.value+'</b><i style="height:'+(i.value/max*78)+'%"></i><span>'+esc(i.label)+'</span></div>').join('')+'</div>';
+}
+function lineChart(points){
+  if(!points.length)return '<p class="empty">No attendance recorded yet.</p>';
+  const W=520,H=210,L=34,R=12,T=12,B=28,pw=W-L-R,ph=H-T-B;
+  const x=i=>L+(points.length===1?pw/2:i*pw/(points.length-1));
+  const y=v=>T+ph-(v/100)*ph;
+  let g='';
+  [0,25,50,75,100].forEach(v=>{g+='<line class="gl" x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'"/><text class="ax" x="'+(L-6)+'" y="'+(y(v)+3)+'" text-anchor="end">'+v+'%</text>'});
+  const pts=points.map((p,i)=>x(i).toFixed(1)+','+y(p.value).toFixed(1)).join(' ');
+  const dots=points.map((p,i)=>'<circle class="pt" cx="'+x(i).toFixed(1)+'" cy="'+y(p.value).toFixed(1)+'" r="4"><title>'+esc(p.label)+': '+p.value.toFixed(0)+'%</title></circle><text class="ax" x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+esc(p.label)+'</text>').join('');
+  return '<svg class="line" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Attendance rate by training day">'+g+'<polyline class="ln" points="'+pts+'"/>'+dots+'</svg>';
+}
+function trendPoints(sessions){
+  const ids=sessions?sessions.map(s=>s.id):null;
+  const by={};
+  S.att.forEach(a=>{
+    const s=byId(S.sessions,a.sid);
+    if(!s||(ids&&ids.indexOf(s.id)<0))return;
+    (by[s.date]=by[s.date]||{p:0,t:0});by[s.date].t++;if(a.status==='present')by[s.date].p++;
+  });
+  return Object.keys(by).sort().map(d=>({label:shortDate(d),value:by[d].p/by[d].t*100}));
+}
+const ageItems=()=>AGES.map(a=>({label:a,value:S.players.filter(p=>p.age===a).length}));
+
+/* ---------- dashboards ---------- */
+function todayRows(list,mode){
+  return list.map(s=>{
+    const c=cls(s.classId),rec=S.att.some(a=>a.sid===s.id);
+    const act=mode==='coach'?'<button class="btn green sm" data-a="take" data-id="'+s.id+'">Take Attendance</button>'+(rec?' '+pill('present','Recorded'):''):'<button class="btn ghost sm" data-a="goto-day" data-id="'+s.date+'">View</button>';
+    return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+s.start+' – '+s.end+'</td><td>'+esc(s.field)+'</td><td>'+esc(first(coachOf(c)))+'</td><td>'+classPlayers(c.id,s.date).length+' players</td><td class="rowact">'+act+'</td></tr>';
+  }).join('');
+}
+function dashAdmin(){
+  const todays=S.sessions.filter(s=>s.date===TODAY).sort(sortSess);
+  const st=attStats();
+  return head('Dashboard','Welcome back, '+UI.user.name,todayChip())+
+  '<section class="tiles">'+tile('Players',S.players.length,'players','blue')+tile('Classes',S.classes.length,'classes','green')+tile('Coaches',S.coaches.length,'coaches','blue')+tile('Training Sessions',S.sessions.length,'training','amber')+'</section>'+
+  '<section class="panel stack16"><div class="panelhead"><h2>Today\'s Training</h2><button class="link" data-a="nav" data-id="training">View All</button></div>'+(todays.length?table(['Class','Time','Field','Coach','Players',''],todayRows(todays,'admin')):'<p class="empty">No sessions today.</p>')+'</section>'+
+  '<div class="grid2"><section class="panel"><h2>Attendance Overview</h2>'+(st.total?attDonutBlock(st):'<p class="empty">No attendance recorded yet.</p>')+'</section><section class="panel"><h2>Players by Age Group</h2>'+barChart(ageItems())+'</section></div>';
+}
+function dashCoach(){
+  const cs=scopeClasses(),ses=scopeSessions();
+  const todays=ses.filter(s=>s.date===TODAY).sort(sortSess);
+  const done=ses.filter(s=>S.att.some(a=>a.sid===s.id)).sort((a,b)=>sortSess(b,a)).slice(0,5);
+  const rows=done.map(s=>{
+    const recs=S.att.filter(a=>a.sid===s.id),pr=recs.filter(a=>a.status==='present').length;
+    return '<tr><td>'+fmtDate(s.date)+'</td><td>'+esc(cls(s.classId).name)+'</td><td>'+pr+' / '+recs.length+'</td><td class="num">'+pct(pr/recs.length*100,0)+'</td></tr>';
+  }).join('');
+  return head('Welcome, Coach '+first(displayName(UI.user)),'Here are your classes and today\'s training sessions.',todayChip())+
+  '<section class="panel stack16"><h2>My Classes</h2>'+(cs.length?'<div class="minis">'+cs.map(c=>'<button class="mini" data-a="open-class" data-id="'+c.id+'"><span class="ti blue">'+svg('classes')+'</span><span><b>'+esc(c.name)+'</b><small>'+classPlayers(c.id).length+' players</small></span></button>').join('')+'</div>':'<p class="empty">No classes assigned.</p>')+'</section>'+
+  '<section class="panel stack16"><h2>Today\'s Training</h2>'+(todays.length?table(['Class','Time','Field','Coach','Players',''],todayRows(todays,'coach')):'<p class="empty">No training today.</p>')+'</section>'+
+  '<section class="panel"><h2>Recent Attendance</h2>'+(rows?table(['Date','Class','Present','Rate'],rows,[3]):'<p class="empty">No attendance recorded yet.</p>')+'</section>';
+}
+function dashParent(){
+  const kids=myChildren();
+  const up=[];
+  kids.forEach(k=>childSessions(k).filter(s=>s.date>=TODAY).forEach(s=>up.push({s,k})));
+  up.sort((a,b)=>sortSess(a.s,b.s));
+  const recs=[];
+  S.att.forEach(a=>{const k=kids.find(x=>x.id===a.pid);if(k)recs.push({a,k,s:byId(S.sessions,a.sid)})});
+  recs.sort((x,y)=>sortSess(y.s,x.s));
+  return head('Hello, '+first(displayName(UI.user)),'Here\'s your children\'s information.',todayChip())+
+  '<section class="panel stack16"><h2>My Children</h2><div class="cards">'+(kids.length?kids.map(childCard).join(''):'<p class="empty">No children linked to this account yet.</p>')+'</div></section>'+
+  '<div class="grid2"><section class="panel"><h2>Upcoming Training</h2>'+(up.length?table(['Date','Child','Class','Time','Field'],up.slice(0,6).map(x=>'<tr><td>'+shortDate(x.s.date)+'</td><td>'+esc(first(x.k.name))+'</td><td>'+esc(cls(x.s.classId).name)+'</td><td>'+x.s.start+'</td><td>'+esc(x.s.field)+'</td></tr>').join('')):'<p class="empty">Nothing scheduled.</p>')+'</section>'+
+  '<section class="panel"><h2>Recent Attendance</h2>'+(recs.length?table(['Date','Child','Class','Status'],recs.slice(0,6).map(x=>'<tr><td>'+shortDate(x.s.date)+'</td><td>'+esc(first(x.k.name))+'</td><td>'+esc(cls(x.s.classId).name)+'</td><td>'+pill(x.a.status)+'</td></tr>').join('')):'<p class="empty">No attendance recorded yet.</p>')+'</section></div>';
+}
+function childCard(p){
+  const st=attStats((a,s,pl)=>pl.id===p.id);
+  const rc=st.rate==null?'info':(st.rate>=90?'good':(st.rate>=80?'late':'absent'));
+  return '<article class="card"><div class="who"><span class="av lg">'+esc(initials(p.name))+'</span><div><h3>'+esc(p.name)+'</h3><span class="mut">'+esc(p.age)+' · '+esc(p.pos)+'</span></div></div><div>'+pill(rc,st.rate==null?'No records':pct(st.rate,0))+' <span class="mut">'+st.present+' / '+st.total+' sessions</span></div><div class="foot"><button class="btn ghost sm" data-a="view-player" data-id="'+p.id+'">View</button></div></article>';
+}
+function dashMgmt(){
+  const st=attStats();
+  return head('Academy Overview','Management summary',todayChip())+
+  '<section class="tiles">'+tile('Players',S.players.length,'players','blue')+tile('Classes',S.classes.length,'classes','green')+tile('Coaches',S.coaches.length,'coaches','blue')+tile('Attendance Rate',st.total?pct(st.rate,0):'–','attendance','green')+'</section>'+
+  '<div class="grid2"><section class="panel"><h2>Players by Age Group</h2>'+barChart(ageItems())+'</section><section class="panel"><h2>Attendance Trend</h2>'+lineChart(trendPoints())+'</section></div>';
+}
+function pgDashboard(){return {admin:dashAdmin,coach:dashCoach,parent:dashParent,management:dashMgmt}[role()]()}
+
+/* ---------- players / parents / coaches / classes ---------- */
+function playersRows(){
+  const q=UI.f.q.toLowerCase(),age=UI.f.age,rw=isAdmin();
+  const list=scopePlayers().filter(p=>(age==='All'||p.age===age)&&(!q||p.name.toLowerCase().indexOf(q)>-1));
+  return list.length?list.map((p,i)=>
+    '<tr><td class="mut">'+(i+1)+'</td><td><b>'+esc(p.name)+'</b></td><td><span class="chip">'+esc(p.age)+'</span></td><td>'+esc(p.pos)+'</td><td>'+esc(p.phone||'–')+'</td><td class="rowact">'+ib('view-player',p.id,'eye','View '+esc(p.name),'view')+(rw?ib('edit-player',p.id,'edit','Edit '+esc(p.name),'edit')+ib('del-player',p.id,'trash','Delete '+esc(p.name),'del'):'')+'</td></tr>'
+  ).join(''):emptyRow(6,'No players match your search.');
+}
+function pgPlayers(){
+  const title=isAdmin()?'Players':(role()==='coach'?'My Players':'Players Overview');
+  return head(title,isAdmin()?'Everyone enrolled at the academy':'Read-only list',isAdmin()?'<button class="btn" data-a="add-player">+ Add Player</button>':'')+
+  '<div class="toolbar"><input id="q" type="search" placeholder="Search players..." value="'+esc(UI.f.q)+'" data-f="q" aria-label="Search players"><label>Age Group <select data-f="age" id="agef">'+['All'].concat(AGES).map(a=>'<option value="'+a+'"'+(UI.f.age===a?' selected':'')+'>'+a+'</option>').join('')+'</select></label></div>'+
+  '<div class="tw"><div class="tablewrap"><table><thead><tr><th>#</th><th>Name</th><th>Age Group</th><th>Position</th><th>Phone</th><th class="num">Actions</th></tr></thead><tbody id="rows">'+playersRows()+'</tbody></table></div></div>';
+}
+function parentsRows(){
+  const q=UI.f.pq.toLowerCase();
+  const list=S.parents.filter(p=>!q||p.name.toLowerCase().indexOf(q)>-1);
+  return list.length?list.map((p,i)=>{
+    const kids=S.links.filter(l=>l.parentId===p.id).map(l=>esc(first(pname(l.playerId)))+' <span class="mut">('+esc(l.rel)+')</span>').join(', ');
+    return '<tr><td class="mut">'+(i+1)+'</td><td><b>'+esc(p.name)+'</b></td><td>'+esc(p.phone)+'</td><td>'+esc(p.email)+'</td><td>'+(kids||'<span class="mut">none linked</span>')+'</td><td class="rowact">'+ib('link-parent',p.id,'link','Link a player to '+esc(p.name),'view')+ib('edit-parent',p.id,'edit','Edit '+esc(p.name),'edit')+ib('del-parent',p.id,'trash','Delete '+esc(p.name),'del')+'</td></tr>';
+  }).join(''):emptyRow(6,'No parents match your search.');
+}
+function pgParents(){
+  return head('Parents / Guardians','A parent can have several players, and a player several guardians','<button class="btn" data-a="add-parent">+ Add Parent</button>')+
+  '<div class="toolbar"><input id="pq" type="search" placeholder="Search parents..." value="'+esc(UI.f.pq)+'" data-f="pq" aria-label="Search parents"></div>'+
+  '<div class="tw"><div class="tablewrap"><table><thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Email</th><th>Players</th><th class="num">Actions</th></tr></thead><tbody id="rows">'+parentsRows()+'</tbody></table></div></div>';
+}
+function pgCoaches(){
+  const cards=S.coaches.map(k=>{
+    const cs=S.classes.filter(c=>c.coachId===k.id);
+    return '<article class="card"><div class="who"><span class="av lg green">'+esc(initials(k.name))+'</span><div><h3>'+esc(k.name)+'</h3><span class="mut">'+esc(k.code)+'</span></div></div>'+
+    '<dl class="kv"><dt>Phone</dt><dd>'+esc(k.phone)+'</dd><dt>Email</dt><dd>'+esc(k.email)+'</dd></dl>'+
+    '<div><span class="mut">Classes</span>'+(cs.length?'<ul class="ul">'+cs.map(c=>'<li>'+esc(c.name)+'</li>').join('')+'</ul>':'<p class="empty" style="padding:2px 0">No classes yet</p>')+'</div>'+
+    '<div class="foot"><span><button class="btn sm" data-a="edit-coach" data-id="'+k.id+'">Edit</button> <button class="btn ghost sm" data-a="view-coach" data-id="'+k.id+'">View</button></span>'+ib('del-coach',k.id,'trash','Delete '+esc(k.name),'del')+'</div></article>';
+  }).join('');
+  return head('Coaches','Each class has one coach; a coach can run several classes','<button class="btn" data-a="add-coach">+ Add Coach</button>')+'<div class="cards">'+cards+'</div>';
+}
+function pgClasses(){
+  if(UI.classId)return pgClassDetail();
+  const rw=isAdmin();
+  const list=scopeClasses();
+  const cards=list.map(c=>
+    '<article class="card"><h3>'+esc(c.name)+'</h3><dl class="kv"><dt>Age Group</dt><dd>'+esc(c.age)+'</dd><dt>Coach</dt><dd>'+esc(coachOf(c))+'</dd><dt>Program</dt><dd>'+esc(c.program)+'</dd><dt>Players</dt><dd>'+classPlayers(c.id).length+'</dd></dl>'+
+    '<div class="foot"><button class="btn ghost sm" data-a="open-class" data-id="'+c.id+'">View Class</button>'+(rw?'<span>'+ib('edit-class',c.id,'edit','Edit '+esc(c.name),'edit')+ib('del-class',c.id,'trash','Delete '+esc(c.name),'del')+'</span>':'')+'</div></article>'
+  ).join('');
+  return head(rw?'Classes':'My Classes','Training groups by age group and level',rw?'<button class="btn" data-a="add-class">+ New Class</button>':'')+(list.length?'<div class="cards">'+cards+'</div>':'<p class="empty">No classes yet.</p>');
+}
+function pgClassDetail(){
+  const c=cls(UI.classId);
+  if(!c||scopeClasses().indexOf(c)<0){UI.classId=null;return pgClasses()}
+  const ps=classPlayers(c.id);
+  const up=S.sessions.filter(s=>s.classId===c.id&&s.date>=TODAY).sort(sortSess);
+  return head(c.name,c.age+' · '+c.program,'<button class="btn ghost" data-a="back-classes">&larr; All classes</button>')+
+  '<section class="tiles">'+tile('Coach',coachOf(c),'coaches','green')+tile('Players',ps.length,'players','blue')+tile('Upcoming sessions',up.length,'training','amber')+'</section>'+
+  '<div class="grid2"><section class="panel"><h2>Players ('+ps.length+')</h2>'+(ps.length?table(['#','Player','Position'],ps.map((p,i)=>'<tr><td class="mut">'+(i+1)+'</td><td><b>'+esc(p.name)+'</b></td><td>'+esc(p.pos)+'</td></tr>').join('')):'<p class="empty">No active registrations.</p>')+'</section>'+
+  '<section class="panel"><h2>Upcoming Training</h2>'+(up.length?table(['Date','Time','Field'],up.map(s=>'<tr><td>'+fmtDate(s.date)+'</td><td>'+s.start+'</td><td>'+esc(s.field)+'</td></tr>').join('')):'<p class="empty">Nothing scheduled.</p>')+'</section></div>';
+}
+function pgChildren(){
+  const kids=myChildren();
+  return head('My Children','Only your own children are shown here')+'<div class="cards">'+(kids.length?kids.map(childCard).join(''):'<p class="empty">No children linked to this account yet.</p>')+'</div>';
+}
+
+/* ---------- registrations ---------- */
+function pgRegistration(){
+  const rows=S.regs.slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id).map(r=>
+    '<tr><td><b>'+esc(pname(r.playerId))+'</b></td><td>'+esc(cls(r.classId).name)+'</td><td>'+fmtDate(r.date)+'</td><td>'+pill(r.status)+'</td><td class="rowact">'+ib('edit-reg',r.id,'edit','Edit registration','edit')+ib('del-reg',r.id,'trash','Delete registration','del')+'</td></tr>'
+  ).join('');
+  return head('Class Registration','A player can join several classes; a class holds many players','<button class="btn" data-a="add-reg">+ New Registration</button>')+
+  '<div class="tw"><div class="tablewrap"><table><thead><tr><th>Player</th><th>Class</th><th>Date</th><th>Status</th><th class="num">Actions</th></tr></thead><tbody>'+(rows||emptyRow(5,'No registrations yet.'))+'</tbody></table></div></div>';
+}
+
+/* ---------- training sessions ---------- */
+function calendar(ses){
+  const parts=UI.calMonth.split('-').map(Number),y=parts[0],m=parts[1];
+  const lead=new Date(y,m-1,1).getDay(),days=new Date(y,m,0).getDate();
+  let cells='';
+  for(let i=0;i<lead;i++)cells+='<span></span>';
+  for(let d=1;d<=days;d++){
+    const ds=y+'-'+pad(m)+'-'+pad(d),n=ses.filter(s=>s.date===ds).length;
+    cells+='<button type="button" class="day'+(ds===TODAY?' today':'')+(ds===UI.calDate?' sel':'')+'" data-a="cal-day" data-id="'+ds+'" aria-label="'+longDate(ds)+(n?', '+n+' session'+(n>1?'s':''):'')+'">'+d+(n?'<i></i>':'')+'</button>';
+  }
+  return '<div class="calh"><button class="ib" data-a="cal-prev" aria-label="Previous month">&lsaquo;</button><b>'+MONTHS[m-1]+' '+y+'</b><button class="ib" data-a="cal-next" aria-label="Next month">&rsaquo;</button></div><div class="calg">'+['Su','Mo','Tu','We','Th','Fr','Sa'].map(x=>'<em>'+x+'</em>').join('')+cells+'</div>';
+}
+function pgTraining(){
+  const r=role(),ses=scopeSessions(),canEdit=r==='admin'||r==='coach';
+  const day=ses.filter(s=>s.date===UI.calDate).sort(sortSess);
+  const items=day.map(s=>{
+    const c=cls(s.classId),recs=S.att.filter(a=>a.sid===s.id),pr=recs.filter(a=>a.status==='present').length;
+    let acts='';
+    if(canEdit)acts='<button class="btn green sm" data-a="take" data-id="'+s.id+'">Take Attendance</button>'+ib('edit-session',s.id,'edit','Edit session','edit')+ib('del-session',s.id,'trash','Delete session','del');
+    else if(recs.length)acts=pill('present',pr+'/'+recs.length+' present');
+    return '<div class="sitem"><div><h3>'+esc(c.name)+'</h3><div class="meta">'+s.start+' – '+s.end+' · '+esc(s.field)+' · Coach '+esc(first(coachOf(c)))+' · '+classPlayers(c.id,s.date).length+' players</div></div><div class="actions">'+acts+'</div></div>';
+  }).join('');
+  return head(r==='parent'?'Training Schedule':'Training Sessions','Pick a day to see its sessions',canEdit?'<button class="btn" data-a="add-session">+ Create Session</button>':'')+
+  '<div class="trg"><section class="panel">'+calendar(ses)+'</section><section class="panel"><h2>'+longDate(UI.calDate)+'</h2>'+(items||'<p class="empty">No sessions on this day.</p>')+'</section></div>';
+}
+
+/* ---------- attendance ---------- */
+function stSelect(name,st){
+  return '<select class="stsel '+st+'" name="'+name+'" aria-label="Status">'+['present','late','absent'].map(v=>'<option value="'+v+'"'+(st===v?' selected':'')+'>'+v.charAt(0).toUpperCase()+v.slice(1)+'</option>').join('')+'</select>';
+}
+function attRows(s){
+  const ps=classPlayers(s.classId,s.date);
+  if(!ps.length)return emptyRow(4,'No players registered for this class on this date.');
+  return ps.map((p,i)=>{
+    const a=getAtt(s.id,p.id),st=a?a.status:'present';
+    return '<tr><td class="mut">'+(i+1)+'</td><td><b>'+esc(p.name)+'</b></td><td>'+stSelect('st_'+p.id,st)+'</td><td><input class="remark" name="rm_'+p.id+'" type="text" placeholder="Remark" value="'+esc(a?a.remark:'')+'" aria-label="Remark for '+esc(p.name)+'"></td></tr>';
+  }).join('');
+}
+function pgAttendance(){
+  if(role()==='parent')return pgParentAttendance();
+  const ses=scopeSessions().sort(sortSess);
+  if(!ses.length)return head('Attendance','')+'<p class="empty">No training sessions yet.</p>';
+  let s=ses.find(x=>x.id===UI.sid);
+  if(!s){s=ses.find(x=>x.date===TODAY)||ses[ses.length-1];UI.sid=s.id}
+  const c=cls(s.classId);
+  const opt=x=>'<option value="'+x.id+'"'+(x.id===s.id?' selected':'')+'>'+fmtDate(x.date)+' · '+x.start+' · '+esc(cls(x.classId).name)+'</option>';
+  const up=ses.filter(x=>x.date>=TODAY),pa=ses.filter(x=>x.date<TODAY).reverse();
+  let saved='';
+  if(UI.saved===s.id){
+    const recs=S.att.filter(a=>a.sid===s.id),pr=recs.filter(a=>a.status==='present').length;
+    saved='<div class="saved"><h3>Attendance saved successfully</h3>Present '+pr+' · Late '+recs.filter(a=>a.status==='late').length+' · Absent '+recs.filter(a=>a.status==='absent').length+' · Rate '+pct(recs.length?pr/recs.length*100:null)+'</div>';
+  }
+  return head('Attendance',c.name+' · '+longDate(s.date)+' · '+s.start+' · '+s.field)+
+  '<div class="toolbar"><select id="sidsel" data-f="sid" aria-label="Training session"><optgroup label="Today and upcoming">'+up.map(opt).join('')+'</optgroup><optgroup label="Past">'+pa.map(opt).join('')+'</optgroup></select></div>'+
+  '<section class="panel"><form id="attform"><div class="panelhead"><h2>'+esc(c.name)+'</h2><div class="actions"><div class="sum" id="livesum"></div><button class="btn ghost sm" type="button" data-a="mark-all">Mark all present</button></div></div>'+
+  '<div class="tablewrap"><table><thead><tr><th>#</th><th>Player</th><th>Status</th><th>Remark</th></tr></thead><tbody>'+attRows(s)+'</tbody></table></div>'+
+  '<div class="df" style="padding:14px 0 0"><button class="btn green" type="submit">Save Attendance</button></div>'+saved+'</form></section>';
+}
+function updateLive(){
+  const f=$('#attform');if(!f)return;
+  const c={present:0,late:0,absent:0};
+  $$('select.stsel',f).forEach(x=>{c[x.value]++;x.className='stsel '+x.value});
+  const el=$('#livesum');
+  if(el)el.innerHTML='<span><b>'+c.present+'</b> present</span><span><b>'+c.late+'</b> late</span><span><b>'+c.absent+'</b> absent</span>';
+}
+function pgParentAttendance(){
+  const kids=myChildren();
+  if(!kids.length)return head('Attendance','')+'<p class="empty">No children linked to this account yet.</p>';
+  let k=kids.find(x=>x.id===UI.child);if(!k){k=kids[0];UI.child=k.id}
+  const st=attStats((a,s,p)=>p.id===k.id);
+  const recs=S.att.filter(a=>a.pid===k.id).map(a=>({a,s:byId(S.sessions,a.sid)})).sort((x,y)=>sortSess(y.s,x.s));
+  const rows=recs.map(x=>'<tr><td>'+fmtDate(x.s.date)+'</td><td>'+esc(cls(x.s.classId).name)+'</td><td>'+pill(x.a.status)+'</td><td>'+esc(x.a.remark||'–')+'</td></tr>').join('');
+  return head('Attendance',k.name)+
+  '<div class="toolbar"><label>Child <select data-f="child" id="childsel">'+kids.map(x=>'<option value="'+x.id+'"'+(x.id===k.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></label></div>'+
+  '<section class="tiles">'+tile('Attendance rate',pct(st.rate,0),'attendance','green')+tile('Present',st.present,'players','blue')+tile('Late',st.late,'training','amber')+tile('Absent',st.absent,'classes','red')+'</section>'+
+  '<section class="panel"><h2>Attendance record</h2>'+table(['Date','Class','Status','Remark'],rows||emptyRow(4,'No attendance recorded yet.'))+'</section>';
+}
+
+/* ---------- reports ---------- */
+const repFilter=()=>{const age=UI.f.rage,mon=UI.f.rmon;return (a,s,p)=>(age==='All'||p.age===age)&&(mon==='all'||s.date.indexOf(mon)===0)};
+function repAttendance(){
+  const flt=repFilter(),st=attStats(flt);
+  const rowsP=S.players.filter(p=>UI.f.rage==='All'||p.age===UI.f.rage).map(p=>({p,o:attStats((a,s,pl)=>pl.id===p.id&&flt(a,s,pl))})).filter(x=>x.o.total).sort((a,b)=>a.o.rate-b.o.rate);
+  const pr=rowsP.map(x=>'<tr><td><b>'+esc(x.p.name)+'</b></td><td class="num">'+x.o.total+'</td><td class="num">'+x.o.present+'</td><td class="num">'+x.o.absent+'</td><td class="num">'+x.o.late+'</td><td class="num"><span class="rbar '+rateClass(x.o.rate)+'"><i style="width:'+x.o.rate+'%"></i></span>'+pct(x.o.rate,0)+'</td></tr>').join('');
+  const sr=S.sessions.slice().sort((a,b)=>sortSess(b,a)).map(s=>{
+    const o=attStats((a,ss,p)=>ss.id===s.id&&flt(a,ss,p));
+    if(!o.total)return '';
+    return '<tr><td>'+fmtDate(s.date)+'</td><td>'+esc(cls(s.classId).name)+'</td><td class="num">'+o.present+'</td><td class="num">'+o.absent+'</td><td class="num">'+o.late+'</td><td class="num">'+pct(o.rate,0)+'</td></tr>';
+  }).join('');
+  return '<div class="grid3"><section class="panel"><h2>Overall Attendance</h2>'+(st.total?attDonutBlock(st):'<p class="empty">No attendance for this filter.</p>')+'</section><section class="panel"><h2>Player Attendance Rate</h2>'+table(['Player','Total','Present','Absent','Late','Rate'],pr||emptyRow(6,'No attendance recorded for this filter.'),[1,2,3,4,5])+'</section></div>'+
+  '<section class="panel"><h2>By Training Session</h2>'+table(['Date','Class','Present','Absent','Late','Rate'],sr||emptyRow(6,'No sessions with attendance.'),[2,3,4,5])+'</section>';
+}
+function repRegistration(){
+  const rows=S.classes.map(c=>({c,n:classPlayers(c.id).length}));
+  const max=Math.max(1,...rows.map(x=>x.n));
+  const act=S.regs.filter(r=>r.status==='Active').length;
+  return '<section class="tiles">'+tile('Registrations',S.regs.length,'registration','blue')+tile('Active',act,'attendance','green')+tile('Pending',S.regs.filter(r=>r.status==='Pending').length,'training','amber')+tile('Inactive',S.regs.filter(r=>r.status==='Inactive').length,'classes','red')+'</section>'+
+  '<section class="panel"><h2>Players per Class</h2>'+rows.map(x=>'<div class="hbar"><span>'+esc(x.c.name)+'</span><div class="t"><i style="width:'+x.n/max*100+'%"></i></div><b>'+x.n+'</b></div>').join('')+'</section>';
+}
+function repPlayers(){
+  const ages=AGES.map(a=>({label:a,value:S.players.filter(p=>p.age===a).length}));
+  const pos=POS.map(a=>({label:a,value:S.players.filter(p=>p.pos===a).length}));
+  const mx=Math.max(1,...pos.map(x=>x.value));
+  return '<section class="tiles">'+tile('Players',S.players.length,'players','blue')+tile('Parents',S.parents.length,'parents','green')+tile('Guardian links',S.links.length,'registration','amber')+'</section>'+
+  '<div class="grid2"><section class="panel"><h2>Players by Age Group</h2>'+barChart(ages)+'</section><section class="panel"><h2>Players by Position</h2>'+pos.map(x=>'<div class="hbar"><span>'+x.label+'</span><div class="t"><i style="width:'+x.value/mx*100+'%"></i></div><b>'+x.value+'</b></div>').join('')+'</section></div>';
+}
+function repOverview(){
+  const st=attStats();
+  return '<section class="tiles">'+tile('Players',S.players.length,'players','blue')+tile('Classes',S.classes.length,'classes','green')+tile('Coaches',S.coaches.length,'coaches','blue')+tile('Attendance Rate',st.total?pct(st.rate,0):'–','attendance','green')+'</section>'+
+  '<div class="grid2"><section class="panel"><h2>Players by Age Group</h2>'+barChart(ageItems())+'</section><section class="panel"><h2>Attendance Trend</h2>'+lineChart(trendPoints())+'</section></div>';
+}
+const repBody=()=>({attendance:repAttendance,registration:repRegistration,players:repPlayers,overview:repOverview}[UI.report])();
+function pgReports(){
+  const months=[];S.sessions.forEach(s=>{const m=s.date.slice(0,7);if(months.indexOf(m)<0)months.push(m)});months.sort();
+  const tabs=[['attendance','Attendance Report'],['players','Player Report'],['registration','Class Registration'],['overview','Academy Overview']].map(t=>'<button type="button" data-a="rep-tab" data-id="'+t[0]+'" aria-pressed="'+(UI.report===t[0])+'">'+t[1]+'</button>').join('');
+  const filt=UI.report==='attendance'?'<div class="toolbar"><label>Age Group <select id="rage" data-f="rage"><option value="All">All</option>'+AGES.map(a=>'<option value="'+a+'"'+(UI.draft.rage===a?' selected':'')+'>'+a+'</option>').join('')+'</select></label><label>Month <select id="rmon" data-f="rmon"><option value="all">All months</option>'+months.map(m=>'<option value="'+m+'"'+(UI.draft.rmon===m?' selected':'')+'>'+monthLabel(m)+'</option>').join('')+'</select></label><button class="btn" type="button" data-a="apply-report">Generate</button></div>':'';
+  return head('Reports','Attendance and enrolment figures')+'<div class="tabs">'+tabs+'</div>'+filt+'<div id="repbody">'+repBody()+'</div>';
+}
+
+/* ---------- accounts & profile ---------- */
+function pgAccounts(){
+  const rows=S.accounts.map((a,i)=>{
+    const me=a.id===UI.user.id;
+    return '<tr><td class="mut">'+(i+1)+'</td><td>'+esc(a.email)+'</td><td>'+esc(ROLES[a.role])+'</td><td>'+esc(displayName(a))+'</td><td><label class="switch"><input type="checkbox" data-a="toggle-acc" data-id="'+a.id+'"'+(a.active?' checked':'')+(me?' disabled':'')+' aria-label="Account active for '+esc(a.email)+'"><span></span></label></td><td class="rowact">'+ib('edit-acc',a.id,'edit','Edit account','edit')+(me?'':ib('del-acc',a.id,'trash','Delete account','del'))+'</td></tr>';
+  }).join('');
+  return head('User Accounts','Admin only. Each account is tied to one role','<button class="btn" data-a="add-acc">+ Add Account</button>')+
+  '<div class="tw"><div class="tablewrap"><table><thead><tr><th>#</th><th>Email</th><th>Role</th><th>Name</th><th>Status</th><th class="num">Actions</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+}
+function accForm(a){
+  a=a||{role:'coach',coachId:'',parentId:''};
+  return fld('Email','email',a.email,'email')+row2(sel('Role','role',Object.keys(ROLES).map(k=>[k,ROLES[k]]),a.role),fld('Display name (admin, management)','name',a.name))+
+  row2(sel('Linked coach','coachId',[['','None']].concat(S.coaches.map(k=>[k.id,k.name])),a.coachId||''),sel('Linked parent','parentId',[['','None']].concat(S.parents.map(p=>[p.id,p.name])),a.parentId||''))+
+  fld(a.id?'New password (leave blank to keep)':'Password','password','','password','autocomplete="new-password"');
+}
+function saveAcc(fd,id){
+  const email=(fd.get('email')||'').trim().toLowerCase(),r=fd.get('role'),pw=fd.get('password')||'';
+  if(!emailOk(email))return 'Enter a valid email address.';
+  if(S.accounts.some(a=>a.email.toLowerCase()===email&&a.id!==id))return 'Another account already uses that email.';
+  const coachId=fd.get('coachId')?+fd.get('coachId'):null,parentId=fd.get('parentId')?+fd.get('parentId'):null;
+  if(r==='coach'&&!coachId)return 'A Coach account must be linked to a coach.';
+  if(r==='parent'&&!parentId)return 'A Parent account must be linked to a parent.';
+  if(!id&&pw.length<6)return 'Password needs at least 6 characters.';
+  if(pw&&pw.length<6)return 'Password needs at least 6 characters.';
+  if((r==='admin'||r==='management')&&!(fd.get('name')||'').trim())return 'Enter a display name.';
+  const rec={email,role:r,name:(fd.get('name')||'').trim(),coachId:r==='coach'?coachId:null,parentId:r==='parent'?parentId:null};
+  if(id){const a=byId(S.accounts,id);Object.assign(a,rec);if(pw)a.password=pw}
+  else S.accounts.push(Object.assign({id:nextId(S.accounts),password:pw,active:true},rec));
+  toast(id?'Account updated':'Account created');
+}
+function pgProfile(){
+  const u=UI.user,r=u.role,rec=r==='coach'?byId(S.coaches,u.coachId):(r==='parent'?byId(S.parents,u.parentId):null);
+  const name=rec?rec.name:u.name;
+  return head('My Profile','')+
+  '<section class="panel" style="max-width:560px"><div class="who" style="display:flex;align-items:center;gap:16px;margin-bottom:16px"><span class="av lg">'+esc(initials(name))+'</span><div><h3 style="font-size:18px">'+esc(name)+'</h3><span class="chip">'+ROLES[r]+'</span></div></div>'+
+  '<form id="profform" novalidate style="display:grid;gap:12px">'+row2(fld('Name','name',name),rec?fld('Phone','phone',rec.phone):'<span></span>')+fld('Email','email',u.email,'email')+fld('New password (leave blank to keep)','password','','password','autocomplete="new-password"')+'<p class="err" id="perr" hidden style="margin:0"></p><div><button class="btn green" type="submit">Save Changes</button></div></form></section>';
+}
+function saveProfile(form){
+  const fd=new FormData(form),u=UI.user,r=u.role;
+  const name=(fd.get('name')||'').trim(),email=(fd.get('email')||'').trim().toLowerCase(),pw=fd.get('password')||'';
+  const err=m=>{const e=$('#perr');e.textContent=m;e.hidden=false};
+  if(!name)return err('Enter your name.');
+  if(!emailOk(email))return err('Enter a valid email address.');
+  if(S.accounts.some(a=>a.email.toLowerCase()===email&&a.id!==u.id))return err('Another account already uses that email.');
+  if(pw&&pw.length<6)return err('Password needs at least 6 characters.');
+  const rec=r==='coach'?byId(S.coaches,u.coachId):(r==='parent'?byId(S.parents,u.parentId):null);
+  if(rec){rec.name=name;rec.phone=(fd.get('phone')||'').trim();rec.email=email}else u.name=name;
+  u.email=email;if(pw)u.password=pw;
+  toast('Profile saved');render();
+}
+
+/* ---------- shell ---------- */
+const PAGES={dashboard:pgDashboard,players:pgPlayers,parents:pgParents,coaches:pgCoaches,classes:pgClasses,registration:pgRegistration,training:pgTraining,attendance:pgAttendance,reports:pgReports,accounts:pgAccounts,children:pgChildren,profile:pgProfile};
+function loginHtml(err){
+  return '<div class="login"><section class="hero">'+BALL.replace('<svg','<svg class="logo"')+'<h1>FAMS</h1><p>Football Academy Management System</p><div class="tag">Manage Players.<br>Build Future Together.</div></section>'+
+  '<section class="lform"><form class="lcard" id="loginform" novalidate><h2>Welcome Back</h2><p class="sub">Sign in to your account</p>'+
+  fld('Email','email','','email','autocomplete="username"')+fld('Password','password','','password','autocomplete="current-password"')+
+  '<p class="err" id="lerr" style="margin:0"'+(err?'':' hidden')+'>'+esc(err||'')+'</p>'+
+  '<div class="lrow"><label class="check"><input type="checkbox" id="remember"> Remember me</label><button type="button" class="link" data-a="forgot">Forgot password?</button></div>'+
+  '<button class="btn block" type="submit">Sign In</button>'+
+  '<div class="demo"><small>Demo accounts, password '+DEMO_PW+'</small><div>'+Object.keys(ROLES).map(k=>'<button type="button" class="btn ghost sm" data-a="demo" data-id="'+k+'">'+ROLES[k]+'</button>').join('')+'</div></div></form></section></div>';
+}
+function shellHtml(){
+  const u=UI.user,nm=displayName(u);
+  const nav=NAVS[u.role].map(n=>{
+    const parts=n[0].split(':'),page=parts[0],rep=parts[1];
+    const cur=UI.navId===n[0];
+    return '<button type="button" data-a="nav" data-id="'+n[0]+'"'+(cur?' aria-current="page"':'')+'>'+svg(n[2])+n[1]+'</button>';
+  }).join('');
+  return '<div class="app"><aside class="side"><div class="brand">'+BALL+'<b>FAMS</b></div><nav class="nav" aria-label="Main">'+nav+'</nav><div class="note">Prototype with sample data held in this page. The real build reads and writes MySQL.</div></aside>'+
+  '<div class="content"><header class="bar"><form class="search" id="gsearch">'+svg('search')+'<input name="q" type="search" placeholder="Search players..." aria-label="Search players"></form>'+
+  '<div class="user"><button class="ubtn" type="button" data-a="menu" aria-haspopup="true"><span class="av">'+esc(initials(nm))+'</span><span class="un"><b>'+esc(ROLES[u.role]+' '+first(nm))+'</b><small>('+ROLES[u.role]+')</small></span>'+svg('chev')+'</button>'+
+  '<div class="menu" id="umenu" hidden><button type="button" data-a="nav" data-id="profile">'+svg('accounts')+'My Profile</button><button type="button" data-a="logout">'+svg('logout')+'Sign out</button></div></div></header>'+
+  '<main class="main" id="main">'+PAGES[UI.page]()+'</main></div></div>';
+}
+function render(){
+  $('#root').innerHTML=UI.user?shellHtml():loginHtml();
+  if(UI.user&&UI.page==='attendance')updateLive();
+}
+function go(id){
+  const parts=id.split(':'),page=parts[0];
+  if(!allowed(page))return;
+  UI.page=page;UI.navId=id;UI.classId=null;UI.saved=null;
+  if(parts[1]){UI.report=parts[1]}
+  if(page==='reports'&&!parts[1]&&NAVS[role()].every(n=>n[0]!=='reports'))UI.report='attendance';
+  if(page==='reports'&&!parts[1]&&isAdmin())UI.report=UI.report||'attendance';
+  if(page==='profile')UI.navId=role()==='parent'?'profile':'';
+  render();window.scrollTo(0,0);
+}
+function signIn(acc){
+  UI.user=acc;UI.f={q:'',age:'All',pq:'',rage:'All',rmon:'all'};UI.draft={rage:'All',rmon:'all'};UI.sid=null;UI.child=null;UI.calDate=TODAY;UI.calMonth=TODAY.slice(0,7);
+  go('dashboard');
+}
+
+/* ---------- modal & toast ---------- */
+function openModal(title,body,o){
+  o=o||{};
+  $('#dt').textContent=title;$('#mbody').innerHTML=body;
+  const b=$('#msubmit');b.textContent=o.submit||'Save';b.hidden=o.submit===null;
+  b.className='btn'+(o.danger?' danger':'');
+  $('#merr').hidden=true;modalCb=o.onSubmit||null;
+  $('#ov').hidden=false;
+  const f=$('#mbody input,#mbody select');if(f&&!o.danger)f.focus();else b.focus();
+}
+const closeModal=()=>{$('#ov').hidden=true;modalCb=null};
+const modalErr=m=>{const e=$('#merr');e.textContent=m;e.hidden=false};
+let toastT;
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},2400)}
+const refreshRows=()=>{const r=$('#rows');if(r)r.innerHTML=UI.page==='players'?playersRows():parentsRows()};
+const confirmDelete=(title,msg,fn)=>openModal(title,'<p style="margin:0">'+msg+'</p>',{submit:'Delete',danger:true,onSubmit:()=>{fn()}});
+
+/* ---------- forms ---------- */
+function playerForm(p,draft){
+  const add=!p,v=draft||p||{};
+  const parentPart=add?row2(sel('Parent / Guardian','parent',[['','None yet']].concat(S.parents.map(x=>[x.id,x.name])),v.parent||'','<button type="button" class="link" data-a="add-parent-inline">+ Add Parent</button>'),sel('Relationship','rel',REL,v.rel||'Father')):'';
+  return fld('Full Name','name',v.name)+row2(fld('Date of Birth','dob',v.dob||'','date','max="'+TODAY+'"'),fld('Phone','phone',v.phone))+row2(sel('Age Group','age',AGES,v.age||'U12'),sel('Primary Position','pos',POS,v.pos||'Forward'))+parentPart;
+}
+function savePlayer(fd,id){
+  const name=(fd.get('name')||'').trim(),dob=fd.get('dob');
+  if(!name)return 'Enter the player\'s full name.';
+  if(!dob)return 'Enter a date of birth.';
+  if(dob>TODAY)return 'Date of birth cannot be in the future.';
+  const rec={name,dob,phone:(fd.get('phone')||'').trim(),age:fd.get('age'),pos:fd.get('pos')};
+  if(id)Object.assign(byId(S.players,id),rec);
+  else{
+    const nid=nextId(S.players);S.players.push(Object.assign({id:nid},rec));
+    if(fd.get('parent'))S.links.push({playerId:nid,parentId:+fd.get('parent'),rel:fd.get('rel'),primary:true});
+  }
+  toast(id?'Player updated':'Player saved');
+}
+function viewPlayer(id){
+  const p=byId(S.players,id),st=attStats((a,s,pl)=>pl.id===id);
+  const g=S.links.filter(l=>l.playerId===id).map(l=>esc(byId(S.parents,l.parentId).name)+' <span class="mut">'+esc(l.rel)+(l.primary?' · primary contact':'')+'</span>');
+  const cs=S.regs.filter(r=>r.playerId===id).map(r=>esc(cls(r.classId).name)+' '+pill(r.status));
+  openModal(p.name,'<dl class="kv"><dt>Player ID</dt><dd>'+pad(p.id)+'</dd><dt>Date of birth</dt><dd>'+longDate(p.dob)+'</dd><dt>Age group</dt><dd>'+esc(p.age)+'</dd><dt>Position</dt><dd>'+esc(p.pos)+'</dd><dt>Phone</dt><dd>'+esc(p.phone||'–')+'</dd>'+(role()==='parent'?'':'<dt>Guardians</dt><dd>'+(g.join('<br>')||'None linked')+'</dd>')+'<dt>Classes</dt><dd>'+(cs.join('<br>')||'Not registered')+'</dd><dt>Attendance</dt><dd>'+st.present+' present, '+st.late+' late, '+st.absent+' absent ('+pct(st.rate,0)+')</dd></dl>',{submit:null});
+}
+const parentFields=p=>{p=p||{};return fld('Full Name','name',p.name)+row2(fld('Phone','phone',p.phone),fld('Email','email',p.email,'email'))};
+function saveParent(fd,id){
+  const name=(fd.get('name')||'').trim(),phone=(fd.get('phone')||'').trim(),email=(fd.get('email')||'').trim();
+  if(!name)return 'Enter the parent\'s name.';
+  if(!phone)return 'Enter a phone number.';
+  if(email&&!emailOk(email))return 'Enter a valid email address.';
+  if(id)Object.assign(byId(S.parents,id),{name,phone,email});else S.parents.push({id:nextId(S.parents),name,phone,email});
+  toast(id?'Parent updated':'Parent saved');
+}
+function saveCoach(fd,id){
+  const name=(fd.get('name')||'').trim(),phone=(fd.get('phone')||'').trim(),email=(fd.get('email')||'').trim();
+  if(!name)return 'Enter the coach\'s name.';
+  if(email&&!emailOk(email))return 'Enter a valid email address.';
+  if(id)Object.assign(byId(S.coaches,id),{name,phone,email});
+  else{const n=nextId(S.coaches);S.coaches.push({id:n,code:'C'+String(n).padStart(3,'0'),name,phone,email})}
+  toast(id?'Coach updated':'Coach saved');
+}
+const classForm=c=>{c=c||{};return fld('Class Name','name',c.name)+row2(sel('Age Group','age',AGES,c.age||'U12'),sel('Coach','coachId',S.coaches.map(k=>[k.id,k.name]),c.coachId||''))+fld('Training Program','program',c.program)};
+function saveClass(fd,id){
+  const name=(fd.get('name')||'').trim();
+  if(!name)return 'Enter a class name.';
+  if(!S.coaches.length)return 'Add a coach first. Every class needs one.';
+  const rec={name,age:fd.get('age'),coachId:+fd.get('coachId'),program:(fd.get('program')||'').trim()||'General'};
+  if(id)Object.assign(cls(id),rec);else S.classes.push(Object.assign({id:nextId(S.classes)},rec));
+  toast(id?'Class updated':'Class created');
+}
+const regForm=()=>sel('Player','playerId',playerOpts(),'')+sel('Class','classId',classOpts(),'')+row2(fld('Registration Date','date',TODAY,'date'),sel('Status','status',['Active','Pending','Inactive'],'Active'));
+function saveReg(fd){
+  const pid=+fd.get('playerId'),cid=+fd.get('classId');
+  if(!fd.get('date'))return 'Enter a registration date.';
+  if(S.regs.some(r=>r.playerId===pid&&r.classId===cid))return pname(pid)+' is already registered in '+cls(cid).name+'.';
+  S.regs.push({id:nextId(S.regs),playerId:pid,classId:cid,date:fd.get('date'),status:fd.get('status')});
+  toast('Player registered');
+}
+function sessionForm(s){
+  s=s||{};
+  const classes=scopeClasses();
+  return sel('Class','classId',classOpts(classes),s.classId||'')+fld('Date','date',s.date||UI.calDate,'date')+row2(fld('Start','start',s.start||'16:00','time'),fld('End','end',s.end||'17:30','time'))+fld('Location','field',s.field||'Field A');
+}
+function saveSession(fd,id){
+  const date=fd.get('date'),st=fd.get('start'),en=fd.get('end'),fl=(fd.get('field')||'').trim();
+  if(!date||!st||!en)return 'Enter a date, start time and end time.';
+  if(en<=st)return 'End time must be after the start time.';
+  if(!fl)return 'Enter a location.';
+  const rec={classId:+fd.get('classId'),date,start:st,end:en,field:fl};
+  if(id)Object.assign(byId(S.sessions,id),rec);else S.sessions.push(Object.assign({id:nextId(S.sessions)},rec));
+  UI.calDate=date;UI.calMonth=date.slice(0,7);
+  toast(id?'Session updated':'Session created');
+}
+
+/* ---------- actions ---------- */
+const H={
+  nav:id=>{go(String(id))},
+  close:closeModal,
+  menu:()=>{const m=$('#umenu');if(m)m.hidden=!m.hidden},
+  logout:()=>{UI.user=null;render()},
+  forgot:()=>toast('Ask an Admin to reset your password.'),
+  demo:r=>{const a=S.accounts.find(x=>x.role===r&&x.active);if(a)signIn(a)},
+  'add-player':()=>openModal('Add New Player',playerForm(),{submit:'Save Player',onSubmit:fd=>savePlayer(fd)}),
+  'edit-player':id=>openModal('Edit Player',playerForm(byId(S.players,id)),{onSubmit:fd=>savePlayer(fd,id)}),
+  'view-player':viewPlayer,
+  'del-player':id=>confirmDelete('Delete Player','Delete <b>'+esc(pname(id))+'</b>? Their registrations, guardian links and attendance records are removed too.',()=>{
+    S.players=S.players.filter(p=>p.id!==id);S.regs=S.regs.filter(r=>r.playerId!==id);S.links=S.links.filter(l=>l.playerId!==id);S.att=S.att.filter(a=>a.pid!==id);toast('Player deleted');
+  }),
+  'add-parent':()=>openModal('Add Parent',parentFields(),{submit:'Save Parent',onSubmit:fd=>saveParent(fd)}),
+  'add-parent-inline':()=>{
+    const draft={};new FormData($('#mform')).forEach((v,k)=>{draft[k]=v});
+    openModal('Add Parent',parentFields(),{submit:'Save Parent',onSubmit:fd=>{
+      const r=saveParent(fd);if(typeof r==='string')return r;
+      draft.parent=String(S.parents[S.parents.length-1].id);
+      openModal('Add New Player',playerForm(null,draft),{submit:'Save Player',onSubmit:f=>savePlayer(f)});
+      return null;
+    }});
+  },
+  'edit-parent':id=>openModal('Edit Parent',parentFields(byId(S.parents,id)),{onSubmit:fd=>saveParent(fd,id)}),
+  'del-parent':id=>confirmDelete('Delete Parent','Delete <b>'+esc(byId(S.parents,id).name)+'</b>? Guardian links are removed; the players stay.',()=>{
+    S.parents=S.parents.filter(p=>p.id!==id);S.links=S.links.filter(l=>l.parentId!==id);toast('Parent deleted');
+  }),
+  'link-parent':id=>openModal('Guardian Relationship','<p class="mut" style="margin:0">Parent: '+esc(byId(S.parents,id).name)+'</p>'+sel('Player','player',playerOpts(),'')+sel('Relationship','rel',REL,'Father')+'<label class="check"><input type="checkbox" id="f_primary" name="primary" checked> Primary contact</label>',{submit:'Save',onSubmit:fd=>{
+    const pid=+fd.get('player'),prim=!!fd.get('primary'),ex=S.links.find(l=>l.playerId===pid&&l.parentId===id);
+    if(prim)S.links.forEach(l=>{if(l.playerId===pid)l.primary=false});
+    if(ex){ex.rel=fd.get('rel');ex.primary=prim}else S.links.push({playerId:pid,parentId:id,rel:fd.get('rel'),primary:prim});
+    toast('Guardian linked');
+  }}),
+  'add-coach':()=>openModal('Add Coach',parentFields(),{submit:'Save Coach',onSubmit:fd=>saveCoach(fd)}),
+  'edit-coach':id=>openModal('Edit Coach',parentFields(byId(S.coaches,id)),{onSubmit:fd=>saveCoach(fd,id)}),
+  'view-coach':id=>{
+    const k=byId(S.coaches,id),cs=S.classes.filter(c=>c.coachId===id);
+    openModal(k.name,'<dl class="kv"><dt>Coach ID</dt><dd>'+esc(k.code)+'</dd><dt>Phone</dt><dd>'+esc(k.phone||'–')+'</dd><dt>Email</dt><dd>'+esc(k.email||'–')+'</dd><dt>Classes</dt><dd>'+(cs.map(c=>esc(c.name)).join('<br>')||'None')+'</dd></dl>',{submit:null});
+  },
+  'del-coach':id=>{
+    const k=byId(S.coaches,id),n=S.classes.filter(c=>c.coachId===id).length;
+    if(n){openModal('Cannot Delete Coach','<p style="margin:0"><b>'+esc(k.name)+'</b> still manages '+n+' class'+(n>1?'es':'')+'. Every class needs a coach, so assign another coach to those classes first.</p>',{submit:null});return}
+    confirmDelete('Delete Coach','Delete <b>'+esc(k.name)+'</b>?',()=>{S.coaches=S.coaches.filter(c=>c.id!==id);toast('Coach deleted')});
+  },
+  'add-class':()=>openModal('New Class',classForm(),{submit:'Create Class',onSubmit:fd=>saveClass(fd)}),
+  'edit-class':id=>openModal('Edit Class',classForm(cls(id)),{onSubmit:fd=>saveClass(fd,id)}),
+  'del-class':id=>{
+    const c=cls(id),n=S.regs.filter(r=>r.classId===id).length+S.sessions.filter(s=>s.classId===id).length;
+    if(n){openModal('Cannot Delete Class','<p style="margin:0"><b>'+esc(c.name)+'</b> has registrations or training sessions attached. Remove those first.</p>',{submit:null});return}
+    confirmDelete('Delete Class','Delete <b>'+esc(c.name)+'</b>?',()=>{S.classes=S.classes.filter(x=>x.id!==id);toast('Class deleted')});
+  },
+  'open-class':id=>{UI.page='classes';UI.navId='classes';UI.classId=id;render();window.scrollTo(0,0)},
+  'back-classes':()=>{UI.classId=null;render()},
+  'add-reg':()=>openModal('Register Player',regForm(),{submit:'Register',onSubmit:fd=>saveReg(fd)}),
+  'edit-reg':id=>{
+    const r=byId(S.regs,id);
+    openModal('Edit Registration','<p style="margin:0"><b>'+esc(pname(r.playerId))+'</b> in <b>'+esc(cls(r.classId).name)+'</b></p>'+row2(fld('Registration Date','date',r.date,'date'),sel('Status','status',['Active','Pending','Inactive'],r.status)),{onSubmit:fd=>{
+      if(!fd.get('date'))return 'Enter a registration date.';
+      r.date=fd.get('date');r.status=fd.get('status');toast('Registration updated');
+    }});
+  },
+  'del-reg':id=>{const r=byId(S.regs,id);confirmDelete('Delete Registration','Remove <b>'+esc(pname(r.playerId))+'</b> from <b>'+esc(cls(r.classId).name)+'</b>?',()=>{S.regs=S.regs.filter(x=>x.id!==id);toast('Registration deleted')})},
+  'add-session':()=>openModal('Create Training Session',sessionForm(),{submit:'Create Session',onSubmit:fd=>saveSession(fd)}),
+  'edit-session':id=>openModal('Edit Training Session',sessionForm(byId(S.sessions,id)),{onSubmit:fd=>saveSession(fd,id)}),
+  'del-session':id=>{const s=byId(S.sessions,id);confirmDelete('Delete Session','Delete the '+esc(cls(s.classId).name)+' session on '+fmtDate(s.date)+'? Its attendance records are removed too.',()=>{S.sessions=S.sessions.filter(x=>x.id!==id);S.att=S.att.filter(a=>a.sid!==id);toast('Session deleted')})},
+  'cal-day':d=>{UI.calDate=d;render()},
+  'cal-prev':()=>calShift(-1),
+  'cal-next':()=>calShift(1),
+  'goto-day':d=>{UI.calDate=d;UI.calMonth=d.slice(0,7);go('training')},
+  take:id=>{UI.sid=id;UI.saved=null;go('attendance')},
+  'mark-all':()=>{$$('#attform select.stsel').forEach(s=>{s.value='present'});updateLive()},
+  'rep-tab':id=>{UI.report=id;render()},
+  'apply-report':()=>{UI.f.rage=UI.draft.rage;UI.f.rmon=UI.draft.rmon;$('#repbody').innerHTML=repBody();toast('Report generated')},
+  'add-acc':()=>openModal('Add Account',accForm(),{submit:'Create Account',onSubmit:fd=>saveAcc(fd)}),
+  'edit-acc':id=>openModal('Edit Account',accForm(byId(S.accounts,id)),{onSubmit:fd=>saveAcc(fd,id)}),
+  'del-acc':id=>{const a=byId(S.accounts,id);confirmDelete('Delete Account','Delete the account <b>'+esc(a.email)+'</b>? The person it belongs to stays in the academy records.',()=>{S.accounts=S.accounts.filter(x=>x.id!==id);toast('Account deleted')})}
+};
+function calShift(n){
+  const p=UI.calMonth.split('-').map(Number),d=new Date(p[0],p[1]-1+n,1);
+  UI.calMonth=d.getFullYear()+'-'+pad(d.getMonth()+1);UI.calDate=UI.calMonth+'-01';render();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const um=$('#umenu');
+  if(um&&!um.hidden&&!e.target.closest('.user'))um.hidden=true;
+  const t=e.target.closest('[data-a]');
+  if(!t||t.tagName==='INPUT')return;
+  const fn=H[t.getAttribute('data-a')];
+  if(!fn)return;
+  const id=t.getAttribute('data-id');
+  fn(id!==null&&/^\d+$/.test(id)?+id:id);
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.getAttribute&&t.getAttribute('data-a')==='toggle-acc'){
+    const a=byId(S.accounts,+t.getAttribute('data-id'));
+    if(a&&a.id!==UI.user.id){a.active=t.checked;toast(a.active?'Account enabled':'Account disabled')}
+  }
+});
+$('#ov').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#ov').hidden)closeModal()});
+$('#mform').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(!modalCb)return;
+  const r=modalCb(new FormData(this));
+  if(r===null)return;
+  if(typeof r==='string'){modalErr(r);return}
+  closeModal();render();
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.closest&&t.closest('#attform')){updateLive();return}
+  const f=t.getAttribute&&t.getAttribute('data-f');
+  if(!f)return;
+  if(f==='sid'){UI.sid=+t.value;UI.saved=null;render();return}
+  if(f==='child'){UI.child=+t.value;render();return}
+  if(f==='rage'||f==='rmon'){UI.draft[f]=t.value;return}
+  UI.f[f]=t.value;
+  if(f==='q'||f==='age'||f==='pq')refreshRows();
+});
+document.addEventListener('submit',e=>{
+  const f=e.target;
+  if(f.id==='loginform'){
+    e.preventDefault();
+    const em=(f.email.value||'').trim().toLowerCase(),pw=f.password.value;
+    const a=S.accounts.find(x=>x.email.toLowerCase()===em&&x.password===pw);
+    const show=m=>{const x=$('#lerr');x.textContent=m;x.hidden=false};
+    if(!em||!pw)return show('Enter your email and password.');
+    if(!a)return show('Email or password is not correct.');
+    if(!a.active)return show('This account is disabled. Ask an Admin to enable it.');
+    signIn(a);return;
+  }
+  if(f.id==='gsearch'){
+    e.preventDefault();
+    if(allowed('players')){UI.f.q=f.q.value.trim();UI.f.age='All';go(role()==='management'?'players':'players')}
+    return;
+  }
+  if(f.id==='profform'){e.preventDefault();saveProfile(f);return}
+  if(f.id==='attform'){
+    e.preventDefault();
+    const s=byId(S.sessions,UI.sid);
+    classPlayers(s.classId,s.date).forEach(p=>{
+      const sl=f.querySelector('select[name="st_'+p.id+'"]'),rm=f.querySelector('input[name="rm_'+p.id+'"]');
+      setAtt(s.id,p.id,sl?sl.value:'present',rm?rm.value.trim():'');
+    });
+    UI.saved=s.id;render();toast('Attendance saved successfully');
+  }
+});
+
+render();
+})();
+</script>
+
+</body></html>

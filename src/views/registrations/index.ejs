@@ -1,0 +1,155 @@
+<%- include('../partials/head') %>
+
+<div class="dashboard-heading">
+  <div>
+    <h1>Registrations</h1>
+    <p>Manage player registrations for academy classes</p>
+  </div>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-danger">
+    <%= error %>
+  </div>
+<% } %>
+
+<section class="dashboard-panel">
+  <h2>Register Player</h2>
+
+  <form method="post" action="/registrations" class="row g-3">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+    <div class="col-md-4">
+      <label for="player_id" class="form-label">Player</label>
+      <select class="form-select" id="player_id" name="player_id" required>
+        <option value="">Select player</option>
+        <% opts.players.forEach(o => { %>
+          <option value="<%= o.id %>"><%= o.label %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label for="class_id" class="form-label">Class</label>
+      <select class="form-select" id="class_id" name="class_id" required>
+        <option value="">Select class</option>
+        <% opts.classes.forEach(o => { %>
+          <option value="<%= o.id %>"><%= o.label %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="col-md-2">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-select" id="status" name="status">
+        <option value="Active">Active</option>
+        <option value="Pending">Pending</option>
+      </select>
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-success w-100">
+        Register
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="dashboard-panel">
+  <div class="dashboard-panel-header">
+    <h2>Registration Records</h2>
+    <span class="text-secondary"><%= rows.length %> records</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="fams-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Class</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% rows.forEach(r => { %>
+          <tr>
+            <td><strong><%= r.player_name %></strong></td>
+            <td><%= r.class_name %></td>
+            <td><%= r.registration_date %></td>
+
+            <td>
+              <form
+                id="registration-update-<%= r.registration_id %>"
+                method="post"
+                action="/registrations/<%= r.registration_id %>/update"
+                class="d-flex align-items-center gap-2"
+              >
+                <input
+                  type="hidden"
+                  name="_csrf"
+                  value="<%= csrfToken %>"
+                >
+
+                <select
+                  class="form-select form-select-sm"
+                  name="status"
+                  aria-label="Registration status"
+                >
+                  <% ['Active', 'Pending', 'Cancelled', 'Completed'].forEach(s => { %>
+                    <option
+                      value="<%= s %>"
+                      <%= r.status === s ? 'selected' : '' %>
+                    >
+                      <%= s %>
+                    </option>
+                  <% }) %>
+                </select>
+
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-outline-primary"
+                >
+                  Save
+                </button>
+              </form>
+            </td>
+
+            <td>
+              <form
+                method="post"
+                action="/registrations/<%= r.registration_id %>/delete"
+                onsubmit="return confirm('Delete registration?')"
+              >
+                <input
+                  type="hidden"
+                  name="_csrf"
+                  value="<%= csrfToken %>"
+                >
+
+                <button
+                  type="submit"
+                  class="btn btn-sm btn-outline-danger"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+
+        <% if (!rows.length) { %>
+          <tr>
+            <td colspan="5" class="text-center text-secondary py-4">
+              No registrations found.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

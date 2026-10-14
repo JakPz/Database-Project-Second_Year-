@@ -1,0 +1,91 @@
+<%- include('../partials/head') %>
+
+<h1 class="h3 mb-3">Attendance</h1>
+
+<% if (error) { %>
+  <div class="alert alert-danger">
+    <%= error %>
+  </div>
+<% } %>
+
+<form class="mb-3">
+  <label class="form-label">Training session</label>
+
+  <select
+    class="form-select"
+    name="session_id"
+    onchange="this.form.submit()"
+  >
+    <% opts.sessions.forEach(s => { %>
+      <option
+        value="<%= s.id %>"
+        <%= String(s.id) === String(sessionId) ? 'selected' : '' %>
+      >
+        <%= s.label %>
+      </option>
+    <% }) %>
+  </select>
+</form>
+
+<div class="card p-4 border-0 shadow-sm">
+  <form method="post" action="/attendance">
+    <input
+      type="hidden"
+      name="_csrf"
+      value="<%= csrfToken %>"
+    >
+
+    <input
+      type="hidden"
+      name="session_id"
+      value="<%= sessionId || '' %>"
+    >
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Registered player</th>
+          <th>Attendance status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% students.forEach(p => { %>
+          <tr>
+            <td>
+              <%= p.player_name %>
+
+              <input
+                type="hidden"
+                name="player_id"
+                value="<%= p.player_id %>"
+              >
+            </td>
+
+            <td>
+              <select class="form-select" name="status">
+                <% ['Present', 'Absent', 'Late', 'Excused'].forEach(s => { %>
+                  <option <%= p.status === s ? 'selected' : '' %>>
+                    <%= s %>
+                  </option>
+                <% }) %>
+              </select>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <% if (students.length) { %>
+      <button class="btn btn-success">
+        Save attendance
+      </button>
+    <% } else { %>
+      <p class="text-secondary">
+        No active registered players for this session.
+      </p>
+    <% } %>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,262 @@
+<%- include('../partials/head') %>
+
+<h1 class="h3 mb-3"><%= title %></h1>
+
+<% if (error) { %>
+  <div class="alert alert-danger">
+    <%= error %>
+  </div>
+<% } %>
+
+<div class="card p-4 border-0 shadow-sm">
+  <form
+    method="post"
+    action="/players<%= record.player_id ? '/' + record.player_id + '/update' : '' %>"
+  >
+    <input
+      type="hidden"
+      name="_csrf"
+      value="<%= csrfToken %>"
+    >
+
+    <h2 class="h5 mb-3">Player Information</h2>
+
+    <div class="row">
+      <%
+        [
+          ['first_name', 'First name', 'text'],
+          ['last_name', 'Last name', 'text'],
+          ['date_of_birth', 'Date of birth', 'date']
+        ].forEach(field => {
+      %>
+        <div class="col-md-4 mb-3">
+          <label class="form-label" for="<%= field[0] %>">
+            <%= field[1] %>
+          </label>
+
+          <input
+            class="form-control"
+            id="<%= field[0] %>"
+            type="<%= field[2] %>"
+            name="<%= field[0] %>"
+            value="<%= record[field[0]] || '' %>"
+            required
+          >
+        </div>
+      <% }) %>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="age_group_id">
+          Age group
+        </label>
+
+        <select
+          class="form-select"
+          id="age_group_id"
+          name="age_group_id"
+          required
+        >
+          <option value="">Select age group</option>
+
+          <% opts.groups.forEach(o => { %>
+            <option
+              value="<%= o.id %>"
+              <%= String(record.age_group_id) === String(o.id) ? 'selected' : '' %>
+            >
+              <%= o.label %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-label" for="position_id">
+          Primary position
+        </label>
+
+        <select
+          class="form-select"
+          id="position_id"
+          name="position_id"
+          required
+        >
+          <option value="">Select position</option>
+
+          <% opts.positions.forEach(o => { %>
+            <option
+              value="<%= o.id %>"
+              <%= String(record.position_id) === String(o.id) ? 'selected' : '' %>
+            >
+              <%= o.label %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2 class="h5 mb-3">
+      Guardian
+      <small class="text-secondary">
+        (required for new players)
+      </small>
+    </h2>
+
+    <div class="mb-3">
+      <label class="form-label" for="parent_id">
+        Link existing guardian
+      </label>
+
+      <select
+        class="form-select"
+        id="parent_id"
+        name="parent_id"
+      >
+        <option value="">Or create below</option>
+
+        <% opts.parents.forEach(o => { %>
+          <option value="<%= o.id %>">
+            <%= o.label %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="row">
+      <%
+        [
+          ['guardian_first_name', 'New guardian first name'],
+          ['guardian_last_name', 'Last name'],
+          ['guardian_phone', 'Phone'],
+          ['guardian_email', 'Email']
+        ].forEach(field => {
+      %>
+        <div class="col-md-6 mb-3">
+          <label class="form-label" for="<%= field[0] %>">
+            <%= field[1] %>
+          </label>
+
+          <input
+            class="form-control"
+            id="<%= field[0] %>"
+            name="<%= field[0] %>"
+            type="<%= field[0] === 'guardian_email' ? 'email' : 'text' %>"
+            value="<%= record[field[0]] || '' %>"
+          >
+        </div>
+      <% }) %>
+    </div>
+
+    <input
+      type="hidden"
+      name="relationship"
+      value="Guardian"
+    >
+
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-success">
+        Save player
+      </button>
+
+      <a href="/players" class="btn btn-outline-secondary">
+        Back
+      </a>
+    </div>
+  </form>
+</div>
+
+<% if (record.player_id) { %>
+  <div class="card border-0 shadow-sm p-4 mt-3">
+    <h2 class="h5">Linked guardians</h2>
+
+    <%
+      const linkedGuardians =
+        typeof guardians !== 'undefined' ? guardians : [];
+    %>
+
+    <% if (!linkedGuardians.length) { %>
+      <p class="text-secondary">
+        No linked guardians found.
+      </p>
+    <% } %>
+
+    <% linkedGuardians.forEach(g => { %>
+      <div class="mb-2">
+        <%= g.parent_name %>
+        —
+        <%= g.relationship %>
+
+        <% if (g.is_primary) { %>
+          <span class="badge bg-success">Primary</span>
+        <% } %>
+      </div>
+    <% }) %>
+
+    <hr>
+
+    <h2 class="h5 mb-3">Add age-group history</h2>
+
+    <form
+      method="post"
+      action="/players/<%= record.player_id %>/history"
+      class="row g-2"
+    >
+      <input
+        type="hidden"
+        name="_csrf"
+        value="<%= csrfToken %>"
+      >
+
+      <div class="col-md-4">
+        <label class="form-label">Age group</label>
+
+        <select
+          class="form-select"
+          name="age_group_id"
+          required
+        >
+          <option value="">Select age group</option>
+
+          <% opts.groups.forEach(o => { %>
+            <option value="<%= o.id %>">
+              <%= o.label %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Start date</label>
+
+        <input
+          class="form-control"
+          type="date"
+          name="start_date"
+          required
+        >
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">End date</label>
+
+        <input
+          class="form-control"
+          type="date"
+          name="end_date"
+          required
+        >
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label d-block">&nbsp;</label>
+
+        <button type="submit" class="btn btn-success w-100">
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+<% } %>
+
+<%- include('../partials/foot') %>

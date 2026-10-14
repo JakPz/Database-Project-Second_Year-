@@ -1,0 +1,108 @@
+<%- include('../partials/head') %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 text-capitalize">
+      <%= slug.replaceAll('-', ' ') %>
+    </h1>
+
+    <p class="text-secondary">
+      Manage academy records
+    </p>
+  </div>
+
+  <a
+    class="btn btn-success"
+    href="/<%= slug %>/new"
+  >
+    + Add new
+  </a>
+</div>
+
+<form
+  method="get"
+  action="/<%= slug %>"
+  class="d-flex gap-2 mb-3"
+>
+  <input
+    class="form-control"
+    type="search"
+    name="q"
+    placeholder="Search records"
+    value="<%= q || '' %>"
+  >
+
+  <button type="submit" class="btn btn-outline-secondary">
+    Search
+  </button>
+</form>
+
+<div class="card shadow-sm border-0 p-3 table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <% def.fields.forEach(f => { %>
+          <th class="text-capitalize">
+            <%= f.replaceAll('_', ' ') %>
+          </th>
+        <% }) %>
+
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% rows.forEach(r => { %>
+        <tr>
+          <% def.fields.forEach(f => { %>
+            <td>
+              <%= r[f] ?? '—' %>
+            </td>
+          <% }) %>
+
+          <td class="text-nowrap">
+            <a
+              class="btn btn-sm btn-outline-primary"
+              href="/<%= slug %>/<%= r[def.pk] %>/edit"
+            >
+              Edit
+            </a>
+
+            <form
+              class="d-inline"
+              method="post"
+              action="/<%= slug %>/<%= r[def.pk] %>/delete"
+              onsubmit="return confirm('Delete this record?')"
+            >
+              <input
+                type="hidden"
+                name="_csrf"
+                value="<%= csrfToken %>"
+              >
+
+              <button
+                type="submit"
+                class="btn btn-sm btn-outline-danger"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+
+      <% if (!rows.length) { %>
+        <tr>
+          <td
+            colspan="<%= def.fields.length + 1 %>"
+            class="text-center text-secondary py-4"
+          >
+            No records found.
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/foot') %>

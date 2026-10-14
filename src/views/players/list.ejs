@@ -1,0 +1,91 @@
+<%- include('../partials/head') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3">Players</h1>
+
+  <a class="btn btn-success" href="/players/new">
+    + Add player
+  </a>
+</div>
+
+<form method="get" action="/players" class="mb-3">
+  <input
+    class="form-control"
+    type="search"
+    name="q"
+    placeholder="Search player"
+    value="<%= q || '' %>"
+  >
+</form>
+
+<div class="card p-3 border-0 shadow-sm table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Birthday</th>
+        <th>Age group</th>
+        <th>Position</th>
+        <th>Guardians</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% rows.forEach(p => { %>
+        <tr>
+          <td>
+            <%= p.first_name %> <%= p.last_name %>
+          </td>
+
+          <td><%= p.date_of_birth %></td>
+
+          <td><%= p.group_name || '—' %></td>
+
+          <td><%= p.position_name || '—' %></td>
+
+          <td><%= p.guardians || '—' %></td>
+
+          <td class="text-nowrap">
+            <a
+              class="btn btn-sm btn-outline-primary"
+              href="/players/<%= p.player_id %>/edit"
+            >
+              Edit
+            </a>
+
+            <form
+              class="d-inline"
+              method="post"
+              action="/players/<%= p.player_id %>/delete"
+              onsubmit="return confirm('Delete player and related records?')"
+            >
+              <input
+                type="hidden"
+                name="_csrf"
+                value="<%= csrfToken %>"
+              >
+
+              <button
+                type="submit"
+                class="btn btn-sm btn-outline-danger"
+              >
+                Delete
+              </button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+
+      <% if (!rows.length) { %>
+        <tr>
+          <td colspan="6" class="text-center text-secondary py-4">
+            No players found.
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,169 @@
+<%- include('../partials/head') %>
+
+<div class="page-heading">
+  <div>
+    <h2>Age Group Recommendations</h2>
+    <p class="text-muted mb-0">
+      Recommend and review player age group changes.
+    </p>
+  </div>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<% if (!admin) { %>
+  <div class="card p-4 mb-4">
+    <h4 class="mb-3">New Recommendation</h4>
+
+    <form method="post" action="/coach/recommendations">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Player</label>
+          <select class="form-select" name="player_id" required>
+            <% players.forEach(p => { %>
+              <option value="<%= p.player_id %>">
+                <%= p.label %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Suggested Age Group</label>
+          <select
+            class="form-select"
+            name="suggested_age_group_id"
+            required
+          >
+            <% groups.forEach(g => { %>
+              <option value="<%= g.age_group_id %>">
+                <%= g.group_name %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Reason</label>
+          <textarea
+            class="form-control"
+            name="reason"
+            rows="4"
+            maxlength="500"
+            placeholder="Explain why this player should move to another age group..."
+            required
+          ></textarea>
+          <div class="form-text">Maximum 500 characters.</div>
+        </div>
+
+        <div class="col-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            <%= players.length === 0 || groups.length === 0 ? 'disabled' : '' %>
+          >
+            <i class="bi bi-send"></i> Submit Recommendation
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+<% } %>
+
+<div class="card p-4">
+  <h4 class="mb-3">
+    <%= admin ? 'Recommendations to Review' : 'My Recommendations' %>
+  </h4>
+
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Suggested Group</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <% if (admin) { %>
+            <th>Coach</th>
+            <th>Review</th>
+          <% } %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% rows.forEach(r => { %>
+          <tr>
+            <td><strong><%= r.player_name %></strong></td>
+            <td><%= r.group_name %></td>
+            <td><%= r.reason %></td>
+            <td>
+              <% if (r.status === 'Approved') { %>
+                <span class="badge bg-success">Approved</span>
+              <% } else if (r.status === 'Rejected') { %>
+                <span class="badge bg-danger">Rejected</span>
+              <% } else { %>
+                <span class="badge bg-warning text-dark">Pending</span>
+              <% } %>
+            </td>
+
+            <% if (admin) { %>
+              <td><%= r.coach_name %></td>
+              <td>
+                <% if (r.status === 'Pending') { %>
+                  <form
+                    method="post"
+                    action="/recommendations/<%= r.recommendation_id %>/review"
+                    class="d-flex gap-2"
+                  >
+                    <input
+                      type="hidden"
+                      name="_csrf"
+                      value="<%= csrfToken %>"
+                    >
+
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-success"
+                      name="decision"
+                      value="Approved"
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-outline-danger"
+                      name="decision"
+                      value="Rejected"
+                    >
+                      Reject
+                    </button>
+                  </form>
+                <% } else { %>
+                  <span class="text-muted">Reviewed</span>
+                <% } %>
+              </td>
+            <% } %>
+          </tr>
+        <% }) %>
+
+        <% if (rows.length === 0) { %>
+          <tr>
+            <td
+              colspan="<%= admin ? 6 : 4 %>"
+              class="text-center text-muted py-4"
+            >
+              No recommendations found.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include('../partials/foot') %>

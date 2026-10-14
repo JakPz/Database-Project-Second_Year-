@@ -1,0 +1,90 @@
+
+<%- include('../partials/head') %>
+
+<h1 class="h3 mb-3">SQL Reports</h1>
+
+<form class="mb-3">
+  <select
+    class="form-select"
+    name="report"
+    onchange="this.form.submit()"
+  >
+    <% names.forEach(n => { %>
+      <option
+        value="<%= n %>"
+        <%= chosen === n ? 'selected' : '' %>
+      >
+        <%= n %>
+      </option>
+    <% }) %>
+  </select>
+</form>
+
+<div class="card border-0 shadow-sm p-3">
+  <h2 class="h5 mb-3"><%= chosen %></h2>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <% Object.keys(rows[0] || {}).forEach(k => { %>
+            <th><%= k.replaceAll('_', ' ') %></th>
+          <% }) %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% rows.forEach(r => { %>
+          <tr>
+            <% Object.values(r).forEach(v => { %>
+              <td><%= v ?? '—' %></td>
+            <% }) %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (!rows.length) { %>
+    <p class="text-secondary">No results</p>
+  <% } %>
+
+  <!-- SQL Query Display -->
+  <details class="mt-3">
+    <summary
+      class="fw-semibold py-2"
+      style="cursor: pointer;"
+    >
+      View SQL Query
+    </summary>
+
+    <div class="mt-2 border rounded overflow-hidden">
+
+      <div
+        class="px-3 py-2 border-bottom bg-light
+               text-secondary small fw-semibold"
+      >
+        <i class="bi bi-code-slash me-2"></i>
+        SQL Query Used for This Report
+      </div>
+
+      <pre
+        class="m-0 p-3"
+        style="
+          background-color: #f8f9fa;
+          color: #212529;
+          font-size: 13px;
+          line-height: 1.7;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          max-width: 100%;
+          overflow-x: auto;
+          font-family: monospace;
+        "
+      ><code><%= sql %></code></pre>
+
+    </div>
+  </details>
+</div>
+
+<%- include('../partials/foot') %>

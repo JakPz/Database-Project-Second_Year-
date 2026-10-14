@@ -1,0 +1,149 @@
+
+<%- include('partials/head') %>
+
+<div class="dashboard-heading">
+  <div>
+    <h1>APEX Dashboard</h1>
+    <p>
+      Welcome back, <%= currentUser?.username %>!
+      Manage your academy with Apex Youth Football Academy.
+    </p>
+  </div>
+
+  <span class="dashboard-date">
+    <%= new Date().toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }) %>
+  </span>
+</div>
+
+<div class="dashboard-stats">
+  <div class="stat-card">
+    <div class="stat-icon">
+      <i class="bi bi-people-fill"></i>
+    </div>
+    <div>
+      <strong><%= stats.players %></strong>
+      <span>Players</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">
+      <i class="bi bi-house-door-fill"></i>
+    </div>
+    <div>
+      <strong><%= stats.classes %></strong>
+      <span>Classes</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">
+      <i class="bi bi-person-badge-fill"></i>
+    </div>
+    <div>
+      <strong><%= stats.coaches %></strong>
+      <span>Coaches</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon">
+      <i class="bi bi-calendar-week-fill"></i>
+    </div>
+    <div>
+      <strong><%= stats.upcoming %></strong>
+      <span>Upcoming Sessions</span>
+    </div>
+  </div>
+</div>
+
+<section class="dashboard-panel">
+  <div class="dashboard-panel-header">
+    <h2>Upcoming Training at APEX</h2>
+    <a href="/sessions">View All →</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="fams-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Class</th>
+          <th>Time</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!upcoming.length) { %>
+          <tr>
+            <td colspan="4">No upcoming sessions.</td>
+          </tr>
+        <% } %>
+
+        <% upcoming.forEach(s => { %>
+          <tr>
+            <td><%= s.session_date %></td>
+            <td>
+              <strong><%= s.class_name %></strong>
+            </td>
+            <td><%= s.start_time %></td>
+            <td><%= s.location || '—' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="dashboard-bottom">
+  <section class="dashboard-panel">
+    <h2>APEX Attendance Overview</h2>
+
+    <div class="attendance-summary">
+      <div class="attendance-circle">
+        <%= stats.attendance_rate == null
+          ? '—'
+          : stats.attendance_rate + '%' %>
+      </div>
+
+      <div>
+        <strong>Attendance Rate</strong>
+        <p>Calculated from MySQL attendance records.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-panel">
+    <h2>APEX Players by Age Group</h2>
+
+    <div class="age-chart">
+      <%
+        const maxPlayers = Math.max(
+          1,
+          ...groups.map(g => Number(g.total) || 0)
+        );
+      %>
+
+      <% groups.forEach(g => { %>
+        <div class="age-chart-row">
+          <span><%= g.group_name %></span>
+
+          <div class="age-chart-track">
+            <div
+              class="age-chart-fill"
+              style="width:<%= Math.max(0, Math.min(100, Number(g.total) / maxPlayers * 100)) %>%">
+            </div>
+          </div>
+
+          <strong><%= g.total %></strong>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+</div>
+
+<%- include('partials/foot') %>

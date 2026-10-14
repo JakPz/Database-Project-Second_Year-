@@ -1,0 +1,140 @@
+<%- include('../partials/head') %>
+
+<div class="page-heading">
+  <div>
+    <h2>My Coaching</h2>
+    <p class="text-muted mb-0">Manage your classes, players and training sessions.</p>
+  </div>
+  <a href="/coach/sessions" class="btn btn-primary">
+    <i class="bi bi-calendar-plus"></i> Manage Sessions
+  </a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card p-4 h-100">
+      <div class="text-muted mb-2">My Classes</div>
+      <h2 class="mb-0"><%= classes.length %></h2>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-4 h-100">
+      <div class="text-muted mb-2">My Players</div>
+      <h2 class="mb-0"><%= players.length %></h2>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card p-4 h-100">
+      <div class="text-muted mb-2">Training Sessions</div>
+      <h2 class="mb-0"><%= sessions.length %></h2>
+    </div>
+  </div>
+</div>
+
+<div class="card p-4 mb-4">
+  <h4 class="mb-3">My Classes</h4>
+
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Class Name</th>
+          <th>Capacity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% classes.forEach(c => { %>
+          <tr>
+            <td><strong><%= c.class_name %></strong></td>
+            <td><%= c.capacity %> players</td>
+          </tr>
+        <% }) %>
+
+        <% if (classes.length === 0) { %>
+          <tr>
+            <td colspan="2" class="text-center text-muted py-4">
+              No classes assigned.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card p-4 mb-4">
+  <h4 class="mb-3">My Players</h4>
+
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Class</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% players.forEach(p => { %>
+          <tr>
+            <td><%= p.first_name %> <%= p.last_name %></td>
+            <td><%= p.class_name %></td>
+          </tr>
+        <% }) %>
+
+        <% if (players.length === 0) { %>
+          <tr>
+            <td colspan="2" class="text-center text-muted py-4">
+              No players assigned.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">My Training Sessions</h4>
+    <a href="/coach/sessions" class="btn btn-sm btn-outline-primary">
+      View All
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Class</th>
+          <th>Date</th>
+          <th>Start Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sessions.forEach(s => { %>
+          <tr>
+            <td><%= s.class_name %></td>
+            <td><%= s.session_date %></td>
+            <td><%= s.start_time %></td>
+          </tr>
+        <% }) %>
+
+        <% if (sessions.length === 0) { %>
+          <tr>
+            <td colspan="3" class="text-center text-muted py-4">
+              No training sessions scheduled.
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <a href="/attendance" class="btn btn-success mt-3 align-self-start">
+    <i class="bi bi-check2-square"></i> Record Attendance
+  </a>
+</div>
+
+<%- include('../partials/foot') %>

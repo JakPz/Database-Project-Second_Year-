@@ -1,0 +1,110 @@
+<%- include('../partials/head') %>
+
+<h1 class="h3 mb-4">
+  <%= title %>
+</h1>
+
+<div
+  class="card border-0 shadow-sm p-4"
+  style="max-width: 720px"
+>
+  <% if (error) { %>
+    <div class="alert alert-danger">
+      <%= error %>
+    </div>
+  <% } %>
+
+  <form
+    method="post"
+    action="/<%= slug %><%= record[def.pk] ? '/' + record[def.pk] + '/update' : '' %>"
+  >
+    <input
+      type="hidden"
+      name="_csrf"
+      value="<%= csrfToken %>"
+    >
+
+    <% def.fields.forEach(f => { %>
+      <div class="mb-3">
+        <label
+          class="form-label text-capitalize"
+          for="<%= f %>"
+        >
+          <%= f.replaceAll('_', ' ') %>
+
+          <% if (def.required.includes(f)) { %>
+            <span class="text-danger">*</span>
+          <% } %>
+        </label>
+
+        <% if (options[f]) { %>
+
+          <select
+            class="form-select"
+            id="<%= f %>"
+            name="<%= f %>"
+            <%= def.required.includes(f) ? 'required' : '' %>
+          >
+            <option value="">Select...</option>
+
+            <% options[f].forEach(o => { %>
+              <option
+                value="<%= o.id %>"
+                <%= String(record[f] ?? '') === String(o.id) ? 'selected' : '' %>
+              >
+                <%= o.label %>
+              </option>
+            <% }) %>
+          </select>
+
+        <% } else if (f === 'position_type') { %>
+
+          <select
+            class="form-select"
+            id="<%= f %>"
+            name="<%= f %>"
+            required
+          >
+            <option value="">Select position type</option>
+
+            <% ['Goalkeeper', 'Outfield'].forEach(x => { %>
+              <option
+                value="<%= x %>"
+                <%= record[f] === x ? 'selected' : '' %>
+              >
+                <%= x %>
+              </option>
+            <% }) %>
+          </select>
+
+        <% } else { %>
+
+          <input
+            class="form-control"
+            id="<%= f %>"
+            name="<%= f %>"
+            type="<%= f.includes('date') ? 'date' : f.includes('time') ? 'time' : f.includes('email') ? 'email' : f.includes('age') || f.includes('capacity') || f.includes('weeks') ? 'number' : 'text' %>"
+            value="<%= record[f] ?? '' %>"
+            <%= def.required.includes(f) ? 'required' : '' %>
+          >
+
+        <% } %>
+      </div>
+    <% }) %>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-success">
+        Save
+      </button>
+
+      <a
+        class="btn btn-outline-secondary"
+        href="/<%= slug %>"
+      >
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/foot') %>

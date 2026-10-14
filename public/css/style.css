@@ -1,0 +1,1014 @@
+
+/* ==================================================
+   FAMS — Football Academy Management System
+   Complete Frontend Stylesheet
+   ================================================== */
+
+/* 1. THEME */
+:root {
+  --navy: #083d91;
+  --navy-dark: #062d68;
+  --blue: #1e88e5;
+  --blue-dark: #1565c0;
+  --green: #42a05c;
+  --green-dark: #2f8a4b;
+  --background: #f4f6f8;
+  --surface: #ffffff;
+  --text: #212529;
+  --muted: #667085;
+  --border: #e3e8ef;
+  --radius: 12px;
+  --shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+  --sidebar-width: 232px;
+}
+
+/* 2. RESET */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", "Noto Sans Thai", sans-serif;
+  background: var(--background);
+  color: var(--text);
+  font-size: 14px;
+}
+
+a {
+  color: var(--blue-dark);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* 3. MAIN APPLICATION LAYOUT */
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  width: 100%;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  background: var(--background);
+}
+
+/* 4. SIDEBAR */
+.app-shell > .sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  height: 100vh;
+  padding: 20px 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: linear-gradient(
+    180deg,
+    var(--navy),
+    var(--navy-dark)
+  );
+  color: #fff;
+  z-index: 100;
+  scrollbar-width: thin;
+}
+
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px 24px;
+  text-decoration: none;
+  color: white;
+}
+
+.sidebar .brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: transparent;
+  font-size: 30px;
+}
+
+.sidebar .brand-text {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.sidebar .brand-text small {
+  color: #c8d9f2;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.sidebar .side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.sidebar .side-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 42px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  color: #dbe6fb;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar .side-link i {
+  width: 18px;
+  flex-shrink: 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+.sidebar .side-link span {
+  min-width: 0;
+}
+
+.sidebar .side-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.sidebar .side-link.active {
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+}
+
+.sidebar .side-foot {
+  margin-top: auto;
+  padding: 20px 12px 8px;
+  color: #9db7ea;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* 5. TOPBAR */
+.app-main > .topbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  min-height: 70px;
+  padding: 12px 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 90;
+}
+
+.topbar .topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(360px, 45%);
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #f6f8fb;
+  color: #98a2b3;
+}
+
+.topbar-search i {
+  font-size: 16px;
+}
+
+.topbar-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.topbar-search input::placeholder {
+  color: #98a2b3;
+}
+
+.topbar .topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.user-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.user-details strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.user-details small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.logout-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 19px;
+}
+
+.logout-button:hover {
+  background: #fff0f0;
+  color: #c62828;
+}
+
+/* 6. MAIN CONTENT */
+.app-main > .content {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 26px 30px 50px;
+  background: var(--background);
+}
+
+/* 7. DASHBOARD HEADING */
+.dashboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.dashboard-heading h1 {
+  margin: 0 0 5px;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dashboard-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dashboard-date {
+  padding-top: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* 8. DASHBOARD STAT CARDS */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  min-height: 104px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.stat-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #e3f0fd;
+  color: #1976d2;
+  font-size: 22px;
+}
+
+.stat-card:nth-child(1) .stat-icon {
+  background: #e1f2e6;
+  color: var(--green-dark);
+}
+
+.stat-card:nth-child(4) .stat-icon {
+  background: #e1f2e6;
+  color: var(--green-dark);
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 27px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.stat-card span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* 9. PANELS AND CARDS */
+.dashboard-panel,
+.panel,
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.dashboard-panel {
+  min-width: 0;
+  margin-bottom: 18px;
+  padding: 20px;
+}
+
+.dashboard-panel h2 {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.dashboard-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dashboard-panel-header h2 {
+  margin: 0;
+}
+
+.dashboard-panel-header a {
+  color: #1976d2;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dashboard-panel-header a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-bottom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* 10. TABLES */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.fams-table,
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.fams-table th,
+.table thead th {
+  padding: 13px;
+  border-bottom: 1px solid var(--border);
+  background: #f6f8fb;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.fams-table td,
+.table tbody td {
+  padding: 13px;
+  border-bottom: 1px solid #edf0f4;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.fams-table tbody tr:hover,
+.table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.fams-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* 11. ATTENDANCE */
+.attendance-summary {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  min-height: 160px;
+}
+
+.attendance-circle {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--green) 0 75%,
+    #e5eaf0 75% 100%
+  );
+  color: var(--text);
+  font-size: 23px;
+  font-weight: 700;
+  isolation: isolate;
+}
+
+.attendance-circle::before {
+  position: absolute;
+  inset: 17px;
+  border-radius: 50%;
+  background: white;
+  content: "";
+  z-index: -1;
+}
+
+.attendance-summary strong {
+  font-size: 14px;
+}
+
+.attendance-summary p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 12. AGE GROUP CHART */
+.age-chart {
+  display: grid;
+  gap: 16px;
+}
+
+.age-chart-row {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 35px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.age-chart-track {
+  height: 16px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #edf2f8;
+}
+
+.age-chart-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: var(--blue);
+  transition: width 0.3s;
+}
+
+.age-chart-row strong {
+  text-align: right;
+}
+
+/* 13. COMMON FORMS */
+.form-control,
+.form-select {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.12);
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+textarea.form-control {
+  min-height: 100px;
+}
+
+/* 14. BUTTONS */
+.btn {
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btn-primary,
+button[type="submit"].btn-primary {
+  border-color: #1976d2;
+  background: #1976d2;
+  color: white;
+}
+
+.btn-primary:hover {
+  border-color: #125ca7;
+  background: #125ca7;
+}
+
+.btn-success {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+  color: white;
+}
+
+.btn-success:hover {
+  border-color: #24713d;
+  background: #24713d;
+}
+
+.btn-outline-primary {
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
+.btn-outline-primary:hover {
+  background: #1976d2;
+  color: white;
+}
+
+/* 15. BADGES */
+.badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 9px;
+}
+
+.badge.bg-success {
+  background: var(--green-dark) !important;
+}
+
+/* 16. LOGIN PAGE */
+.fams-login {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.login-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 60px;
+  color: #fff;
+  background:
+    linear-gradient(
+      140deg,
+      rgba(5, 38, 76, 0.65),
+      rgba(5, 65, 49, 0.55)
+    ),
+    url("https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1400&q=85")
+      center / cover;
+}
+
+.hero-content {
+  text-align: center;
+}
+
+.football-logo {
+  margin-bottom: 12px;
+  font-size: 90px;
+}
+
+.hero-content h1 {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 86px);
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.hero-content p {
+  margin: 12px 0 36px;
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.hero-tagline {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.login-form-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px;
+  background: var(--background);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  width: min(420px, 100%);
+}
+
+.login-card h2 {
+  margin-bottom: 4px;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  margin-bottom: 28px;
+  color: var(--muted);
+}
+
+.login-card label {
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-card input {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: none;
+  background: white;
+  color: var(--text);
+}
+
+.login-card input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.12);
+}
+
+.login-submit {
+  width: 100%;
+  padding: 13px;
+  border: 0;
+  border-radius: 8px;
+  background: #0879e7;
+  color: #fff;
+  font-weight: 600;
+}
+
+.login-submit:hover {
+  background: #0869c6;
+}
+
+.login-error {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fbe0dd;
+  color: #c62828;
+}
+
+.login-footer {
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 17. TABLET */
+@media (max-width: 1100px) {
+  :root {
+    --sidebar-width: 215px;
+  }
+
+  .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-main > .content {
+    padding: 24px;
+  }
+}
+
+/* 18. MOBILE */
+@media (max-width: 768px) {
+  .app-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-shell > .sidebar {
+    display: none;
+  }
+
+  .app-main {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-main > .topbar {
+    min-height: 62px;
+    padding: 12px 16px;
+  }
+
+  .topbar .topbar-search {
+    width: min(250px, 45%);
+  }
+
+  .user-details {
+    display: none;
+  }
+
+  .app-main > .content {
+    padding: 18px;
+  }
+
+  .dashboard-heading h1 {
+    font-size: 23px;
+  }
+
+  .dashboard-stats,
+  .dashboard-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    min-height: 90px;
+  }
+
+  .fams-login {
+    grid-template-columns: 1fr;
+  }
+
+  .login-hero {
+    min-height: 270px;
+    padding: 30px;
+  }
+
+  .football-logo {
+    font-size: 52px;
+  }
+
+  .hero-content h1 {
+    font-size: 45px;
+  }
+
+  .hero-content p {
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .hero-tagline {
+    font-size: 13px;
+  }
+
+  .login-form-section {
+    min-height: auto;
+    padding: 35px 20px;
+  }
+
+  .attendance-summary {
+    flex-wrap: wrap;
+  }
+}
+
+/* 19. SMALL MOBILE */
+@media (max-width: 480px) {
+  .dashboard-heading {
+    flex-direction: column;
+  }
+
+  .dashboard-date {
+    padding-top: 0;
+  }
+
+  .topbar .topbar-search {
+    width: 48%;
+  }
+
+  .topbar .topbar-user {
+    gap: 6px;
+  }
+
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dashboard-panel {
+    padding: 15px;
+  }
+
+  .age-chart-row {
+    grid-template-columns: 55px minmax(0, 1fr) 25px;
+    gap: 8px;
+  }
+}
+/* ============================================
+   FAMS - Coach & Parent Portal Improvements
+   ============================================ */
+
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.page-heading h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1f2937;
+}
+
+.content .card {
+  border: 1px solid #e5eaf0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.content .card h4,
+.content .card h5 {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.content .form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.content .form-control,
+.content .form-select {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid #dbe3ed;
+  border-radius: 9px;
+  padding: 9px 12px;
+  background-color: #ffffff;
+  font-size: 14px;
+}
+
+.content textarea.form-control {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.content .form-control:focus,
+.content .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.content .table {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.content .table thead th {
+  background: #f5f7fb;
+  color: #64748b;
+  font-weight: 600;
+  padding: 14px;
+  border-bottom: 1px solid #e5eaf0;
+}
+
+.content .table tbody td {
+  padding: 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.content .table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.content .table tbody tr:hover {
+  background: #f9fbff;
+}
+
+.content .btn {
+  border-radius: 9px;
+  font-weight: 600;
+  padding: 10px 16px;
+}
+
+.content .btn-sm {
+  padding: 6px 12px;
+}
+
+.content .badge {
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.content .alert {
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+
+.content .table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .page-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .page-heading h2 {
+    font-size: 24px;
+  }
+
+  .content .card {
+    padding: 18px !important;
+  }
+
+  .content .btn.w-100 {
+    width: 100%;
+  }
+}

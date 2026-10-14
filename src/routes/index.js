@@ -1,0 +1,10 @@
+'use strict';
+const express=require('express'); const db=require('../config/db'); const router=express.Router();
+router.get('/',async(req,res,next)=>{try{if(req.session.user.role==='Coach')return res.redirect('/coach');if(req.session.user.role==='Parent')return res.redirect('/parent');
+ const stats=await db.query(`SELECT (SELECT COUNT(*) FROM player) players,(SELECT COUNT(*) FROM coach) coaches,(SELECT COUNT(*) FROM class) classes,(SELECT COUNT(*) FROM training_session WHERE session_date>=CURDATE()) upcoming,(SELECT ROUND(100*SUM(status IN ('Present','Late'))/NULLIF(COUNT(*),0),1) FROM attendance) attendance_rate`);
+ const upcoming=await db.query(`SELECT s.session_date,s.start_time,c.class_name,s.location FROM training_session s JOIN class c ON c.class_id=s.class_id WHERE s.session_date>=CURDATE() ORDER BY s.session_date,s.start_time LIMIT 6`);
+ const groups=await db.query(`SELECT ag.group_name,COUNT(p.player_id) total FROM age_group ag LEFT JOIN player p ON p.age_group_id=ag.age_group_id GROUP BY ag.age_group_id,ag.group_name`);
+ res.render('dashboard',{title:'Dashboard',activePage:'dashboard',stats:stats[0],upcoming,groups});
+ }catch(e){next(e)}});
+router.get('/health/db',async(req,res)=>{const s=await db.checkConnection();res.status(s.connected?200:503).json(s)});
+module.exports=router;

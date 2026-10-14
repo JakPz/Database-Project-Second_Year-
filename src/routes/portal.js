@@ -1,0 +1,20 @@
+'use strict';
+const express=require('express'),db=require('../config/db'),router=express.Router();
+router.get('/coach',async(req,res,next)=>{try{if(req.session.user.role!=='Coach')return res.sendStatus(403);const id=req.session.user.coachId;
+ const classes=await db.query('SELECT class_name,capacity FROM class WHERE coach_id=?',[id]);
+ const players=await db.query(`SELECT DISTINCT p.first_name,p.last_name,c.class_name FROM player p JOIN registration r ON r.player_id=p.player_id AND r.status='Active' JOIN class c ON c.class_id=r.class_id WHERE c.coach_id=?`,[id]);
+ const sessions=await db.query('SELECT s.session_date,s.start_time,c.class_name FROM training_session s JOIN class c ON c.class_id=s.class_id WHERE c.coach_id=? ORDER BY s.session_date',[id]);
+ res.render('portal/coach',{title:'My coaching',activePage:'',classes,players,sessions});}catch(e){next(e)}});
+router.get('/parent',async(req,res,next)=>{try{if(req.session.user.role!=='Parent')return res.sendStatus(403);const id=req.session.user.parentId;
+ const parents=await db.query('SELECT * FROM parent WHERE parent_id=?',[id]);
+ const players=await db.query('SELECT p.player_id,p.first_name,p.last_name,p.date_of_birth FROM parent_player pp JOIN player p ON p.player_id=pp.player_id WHERE pp.parent_id=?',[id]);
+ const sessions=await db.query(`SELECT DISTINCT p.first_name,c.class_name,s.session_date,s.start_time FROM parent_player pp JOIN player p ON p.player_id=pp.player_id JOIN registration r ON r.player_id=p.player_id AND r.status='Active' JOIN class c ON c.class_id=r.class_id JOIN training_session s ON s.class_id=c.class_id WHERE pp.parent_id=? ORDER BY s.session_date`,[id]);
+ const registrations=await db.query(`SELECT p.first_name,p.last_name,c.class_name,r.status,r.registration_date FROM parent_player pp JOIN player p ON p.player_id=pp.player_id JOIN registration r ON r.player_id=p.player_id JOIN class c ON c.class_id=r.class_id WHERE pp.parent_id=? ORDER BY r.registration_date DESC`,[id]);const attendance=await db.query(`SELECT p.first_name,p.last_name,c.class_name,s.session_date,a.status FROM parent_player pp JOIN player p ON p.player_id=pp.player_id JOIN attendance a ON a.player_id=p.player_id JOIN training_session s ON s.session_id=a.session_id JOIN class c ON c.class_id=s.class_id WHERE pp.parent_id=? ORDER BY s.session_date DESC`,[id]);res.render('portal/parent',{title:'My family',activePage:'',parent:parents[0],players,sessions,registrations,attendance,saved:req.query.saved,error:req.query.error});}catch(e){next(e)}});
+router.post('/parent/profile',async(req,res,next)=>{try{if(req.session.user.role!=='Parent')return res.sendStatus(403);if(!String(req.body.phone||'').trim())return res.status(400).send('Phone required');await db.query('UPDATE parent SET phone=?,email=? WHERE parent_id=?',[req.body.phone,req.body.email||null,req.session.user.parentId]);res.redirect('/parent?saved=1')}catch(e){next(e)}});
+router.post('/parent/child/:id',async(req,res,next)=>{try{
+ if(req.session.user.role!=='Parent')return res.sendStatus(403);
+ const {first_name,last_name}=req.body;if(!String(first_name||'').trim()||!String(last_name||'').trim())return res.redirect('/parent?error=Name%20required');
+ const result=await db.query('UPDATE player p JOIN parent_player pp ON pp.player_id=p.player_id SET p.first_name=?,p.last_name=? WHERE p.player_id=? AND pp.parent_id=?',[first_name.trim(),last_name.trim(),req.params.id,req.session.user.parentId]);
+ if(!result.affectedRows)return res.sendStatus(403);res.redirect('/parent?saved=1');
+ }catch(e){next(e)}});
+module.exports=router;

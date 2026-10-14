@@ -1,0 +1,93 @@
+
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+  <a href="/" class="brand">
+    <span class="brand-mark">⚽</span>
+    <span class="brand-text">
+      APEX
+      <small>Youth Football Academy</small>
+    </span>
+  </a>
+
+  <nav class="side-nav">
+    <%
+      const role = currentUser?.role;
+
+      const icons = {
+        Dashboard: 'bi-grid-1x2-fill',
+        Players: 'bi-people-fill',
+        Parents: 'bi-person-hearts',
+        Coaches: 'bi-person-badge-fill',
+        Classes: 'bi-house-door-fill',
+        'Age Groups': 'bi-diagram-3-fill',
+        Positions: 'bi-person-standing',
+        'Training Programs': 'bi-journal-bookmark-fill',
+        'Training Sessions': 'bi-calendar-week-fill',
+        Registrations: 'bi-clipboard-check-fill',
+        Attendance: 'bi-check2-circle',
+        Reports: 'bi-bar-chart-fill',
+        'User Accounts': 'bi-person-gear',
+        Recommendations: 'bi-lightbulb-fill',
+        'My Coaching': 'bi-house-door-fill',
+        'My Sessions': 'bi-calendar-week-fill',
+        'My Family': 'bi-people-fill'
+      };
+
+      const links = role === 'Admin'
+        ? [
+            ['Dashboard','/'],
+            ['Players','/players'],
+            ['Parents','/parents'],
+            ['Coaches','/coaches'],
+            ['Classes','/classes'],
+            ['Age Groups','/age-groups'],
+            ['Positions','/positions'],
+            ['Training Programs','/programs'],
+            ['Registrations','/registrations'],
+            ['Training Sessions','/sessions'],
+            ['Attendance','/attendance'],
+            ['Recommendations','/recommendations'],
+            ['Reports','/reports'],
+            ['User Accounts','/users']
+          ]
+        : role === 'Coach'
+        ? [
+            ['Dashboard','/coach'],
+            ['My Coaching','/coach'],
+            ['My Sessions','/coach/sessions'],
+            ['Attendance','/attendance'],
+            ['Recommendations','/coach/recommendations']
+          ]
+        : role === 'Parent'
+        ? [
+            ['Dashboard','/parent'],
+            ['My Family','/parent']
+          ]
+        : [
+            ['Dashboard','/'],
+            ['Reports','/reports']
+          ];
+
+      const path = typeof currentPath !== 'undefined'
+        ? currentPath
+        : '';
+    %>
+
+    <% links.forEach(([label, href]) => { %>
+      <a href="<%= href %>"
+         class="side-link <%= path === href ? 'active' : '' %>">
+        <i class="bi <%= icons[label] || 'bi-circle' %>"></i>
+        <span><%= label %></span>
+      </a>
+    <% }) %>
+
+    <a href="/profile" class="side-link">
+      <i class="bi bi-person-circle"></i>
+      <span>My Profile</span>
+    </a>
+  </nav>
+
+  <div class="side-foot">
+    Apex Youth Football Academy<br>
+    Football Academy Management System (FAMS)
+  </div>
+</aside>

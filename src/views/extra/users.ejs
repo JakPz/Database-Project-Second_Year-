@@ -1,0 +1,161 @@
+<%- include('../partials/head') %>
+
+<h2>Manage user accounts</h2>
+
+<% if (error) { %>
+  <div class="alert alert-danger">
+    <%= error %>
+  </div>
+<% } %>
+
+<% if (success) { %>
+  <div class="alert alert-success">
+    Saved.
+  </div>
+<% } %>
+
+<div class="card p-4 mb-4">
+  <h3 class="h5">Create account</h3>
+
+  <form method="post" action="/users">
+    <input
+      type="hidden"
+      name="_csrf"
+      value="<%= csrfToken %>"
+    >
+
+    <label>
+      Username
+      <input
+        class="form-control"
+        name="username"
+        required
+        minlength="3"
+      >
+    </label>
+
+    <label>
+      Password (12+ characters)
+      <input
+        class="form-control"
+        name="password"
+        type="password"
+        minlength="12"
+        required
+      >
+    </label>
+
+    <label>
+      Role
+      <select class="form-select" name="role" required>
+        <% ['Admin', 'Coach', 'Parent', 'Management'].forEach(r => { %>
+          <option value="<%= r %>">
+            <%= r %>
+          </option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>
+      Coach (only for Coach role)
+      <select class="form-select" name="coach_id">
+        <option value="">None</option>
+
+        <% coaches.forEach(c => { %>
+          <option value="<%= c.id %>">
+            <%= c.label %>
+          </option>
+        <% }) %>
+      </select>
+    </label>
+
+    <label>
+      Parent (only for Parent role)
+      <select class="form-select" name="parent_id">
+        <option value="">None</option>
+
+        <% parents.forEach(c => { %>
+          <option value="<%= c.id %>">
+            <%= c.label %>
+          </option>
+        <% }) %>
+      </select>
+    </label>
+
+    <div>
+      <button class="btn btn-success mt-3">
+        Create user
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="card p-3 table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Role</th>
+        <th>Linked ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% users.forEach(u => { %>
+        <tr>
+          <td><%= u.username %></td>
+          <td><%= u.role %></td>
+          <td><%= u.coach_id || u.parent_id || '—' %></td>
+
+          <td>
+            <form
+              method="post"
+              action="/users/<%= u.user_id %>/reset"
+              class="d-inline"
+            >
+              <input
+                type="hidden"
+                name="_csrf"
+                value="<%= csrfToken %>"
+              >
+
+              <input
+                name="password"
+                type="password"
+                minlength="12"
+                placeholder="New password"
+                required
+              >
+
+              <button class="btn btn-sm btn-outline-primary">
+                Reset
+              </button>
+            </form>
+
+            <% if (u.user_id !== currentUser.id) { %>
+              <form
+                class="d-inline"
+                method="post"
+                action="/users/<%= u.user_id %>/delete"
+                onsubmit="return confirm('Delete user account?')"
+              >
+                <input
+                  type="hidden"
+                  name="_csrf"
+                  value="<%= csrfToken %>"
+                >
+
+                <button class="btn btn-sm btn-outline-danger">
+                  Delete
+                </button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/foot') %>
